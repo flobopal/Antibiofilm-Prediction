@@ -12,3 +12,11 @@ def test_read_files():
     files = [os.path.join('data', file) for file in files]
     data = merge_fingerprints.read_files(files)
     assert(len(data) == len(files))
+
+def test_merge():
+    files = os.listdir('data')
+    files = [os.path.join('data', file) for file in files]
+    fingerprints = merge_fingerprints.read_files(files)
+    df = merge_fingerprints.merge(fingerprints)
+    assert df.shape[0] == fingerprints[0].shape[0]
+    assert df.shape[1] == sum(fp.shape[1] for fp in fingerprints)

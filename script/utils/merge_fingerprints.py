@@ -62,3 +62,12 @@ def read_npz(filename: str, key: str|int = 0) -> np.ndarray:
     if key == 0:
         key= list(data.keys())[key]
     return data[key]
+
+def merge(fingerprints: list[pd.DataFrame | np.ndarray]) -> pd.DataFrame:
+    dataframes = []
+    for fp in fingerprints:
+        if isinstance(fp, pd.DataFrame):
+            dataframes.append(fp)
+        else:
+            dataframes.append(pd.DataFrame(fp))
+    return pd.concat(dataframes, axis=1)
