@@ -40,7 +40,7 @@ def read_csv(filename: str) -> pd.DataFrame:
         pd.errors.EmptyDataError: If the file is empty.
         pd.errors.ParserError: If the file cannot be parsed as CSV.
     """
-    return pd.read_csv(filename)
+    return pd.read_csv(filename, index_col=0)
 
 def read_npz(filename: str, key: str|int = 0) -> np.ndarray:
     """
