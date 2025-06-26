@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import os
 
 def read_files(list_of_files: list[str]) -> list[pd.DataFrame | np.ndarray]:
     """
@@ -71,3 +72,13 @@ def merge(fingerprints: list[pd.DataFrame | np.ndarray]) -> pd.DataFrame:
         else:
             dataframes.append(pd.DataFrame(fp))
     return pd.concat(dataframes, axis=1)
+
+def read_folder(folder: str) -> pd.DataFrame:
+    fingerprints = []
+    for file in os.listdir(folder):
+        path = os.path.join(folder, file)
+        if file.endswith('.csv'):
+            fingerprints.append(read_csv(path))
+        elif file.endswith('.npz'):
+            fingerprints.append(read_npz(path))
+    return merge(fingerprints)
