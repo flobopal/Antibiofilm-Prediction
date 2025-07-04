@@ -1,4 +1,4 @@
-from model.interaction import MoleculeOrganismInteraction
+from model.interaction import MoleculeOrganismInteraction, MoleculeOrganismInteractionParams
 import torch
 
 def test_output_shape():
@@ -57,3 +57,12 @@ def test_forward_backward():
 
     assert Xd.grad is not None, "No gradient for Xd"
     assert Xp.grad is not None, "No gradient for Xp"
+
+def test_params_init():
+    params = MoleculeOrganismInteractionParams(5, 6, 7, 4, 'linear', 0.5)
+    model = MoleculeOrganismInteraction.from_params(params)
+    assert model.fd == 5
+    assert model.fo == 6
+    assert model.fk == 7
+    assert model.pooling == 'linear'
+    assert model.dropout.p == 0.5

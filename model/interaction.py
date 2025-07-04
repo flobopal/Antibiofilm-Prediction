@@ -10,13 +10,13 @@ class MoleculeOrganismInteractionParams:
     org_input_dim: int
     embed_dim: int
     num_heads: int = 4
-    pooling: Literal['max', 'mean'] = 'max'
+    pooling: Literal['linear', 'max', 'mean'] = 'max'
     dropout: float = 0.1
 
 
 class MoleculeOrganismInteraction(nn.Module):
     """
-    MoleculeOrganismInteraction implements a custom multi-head attention mechanism for modeling interactions between molecule and organism representations.
+    'MoleculeOrganismInteraction' implements a custom multi-head attention mechanism for modeling interactions between molecule and organism representations.
 
     Args:
         fd (int): Feature dimension of the molecule input (Xd).
@@ -60,7 +60,7 @@ class MoleculeOrganismInteraction(nn.Module):
             dropout=0.1,
             pooling: Literal['linear', 'max', 'mean'] = 'max'):
         
-        assert pooling in ["linear", "mean", "max"], f"Unknown pooling: {self.pooling}"
+        assert pooling in ["linear", "mean", "max"], f"Unknown pooling: {pooling}"
 
         super().__init__()
         self.fd = fd
