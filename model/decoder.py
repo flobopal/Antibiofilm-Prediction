@@ -1,5 +1,14 @@
+from typing import List, Self, Union
 import torch.nn as nn
 from script.utils.activation_functions import get_activation
+from dataclasses import dataclass
+
+@dataclass
+class FeedForwardNetworkParams:
+    input_dims: int
+    hidden_dims: list[int]
+    activations: Union[str, List[str]]
+    dropout: float = 0.1
 
 class FeedForwardNetwork(nn.Module):
     """
@@ -51,6 +60,24 @@ class FeedForwardNetwork(nn.Module):
         layers.append(nn.Linear(dim, 1))
 
         self.model = nn.Sequential(*layers)
+
+    @classmethod
+    def from_params(cls, params: FeedForwardNetworkParams) -> Self:
+        """
+        Create a FeedForwardNetwork instance from FeedForwardNetworkParams.
+
+        Args:
+            params (FeedForwardNetworkParams): Parameters for the feed-forward network.
+
+        Returns:
+            FeedForwardNetwork: An instance of the feed-forward network.
+        """
+        return cls(
+                input_dim=params.input_dims,
+                layer_dims=params.hidden_dims,
+                activations=params.activations,
+                dropout=params.dropout
+            )
 
     def forward(self, x):
         return self.model(x)
