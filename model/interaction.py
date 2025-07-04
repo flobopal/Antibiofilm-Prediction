@@ -1,6 +1,18 @@
-from typing import Literal
+from typing import Literal, Self
 import torch
 import torch.nn as nn
+
+from dataclasses import dataclass
+
+@dataclass
+class MoleculeOrganismInteractionParams:
+    mol_input_dim: int
+    org_input_dim: int
+    embed_dim: int
+    num_heads: int = 4
+    pooling: Literal['max', 'mean'] = 'max'
+    dropout: float = 0.1
+
 
 class MoleculeOrganismInteraction(nn.Module):
     """
@@ -66,6 +78,28 @@ class MoleculeOrganismInteraction(nn.Module):
         if self.pooling == 'linear':
             self.output_proj = nn.Linear(num_heads * fd, fd)
         self.dropout = nn.Dropout(dropout)
+
+    @classmethod
+    def from_params(cls, params: MoleculeOrganismInteractionParams) -> Self:
+        """
+        Creates an instance of the class from a MoleculeOrganismInteractionParams object.
+
+        Args:
+            params (MoleculeOrganismInteractionParams): An object containing the configuration parameters
+                required to initialize the class, including molecular input dimension, organism input
+                dimension, embedding dimension, number of attention heads, dropout rate, and pooling type.
+
+        Returns:
+            Self: An instance of the class initialized with the parameters provided in `params`.
+        """
+        return cls(
+            fd=params.mol_input_dim,
+            fo=params.org_input_dim,
+            fk=params.embed_dim,
+            num_heads=params.num_heads,
+            dropout=params.dropout,
+            pooling=params.pooling
+        )
 
     def forward(self, Xd, Xo):
         # Xd: (batch, 1, fd)  molecule embeddings
