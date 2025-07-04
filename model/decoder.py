@@ -45,18 +45,22 @@ class FeedForwardNetwork(nn.Module):
                  dropout: float=0.1):
         super().__init__()
         if isinstance(activations, str):
-            activations = [activations]*len(layer_dims)
-        assert len(layer_dims) == len(activations), "length of activations should match length of layers"
+            activations = [activations]*(len(layer_dims)+1)
+        assert len(layer_dims)+1 == len(activations), "length of activations should match length of layers"
 
         layers = []
         dim = input_dim
 
+        #Add hidden layers
         for next_dim, act_name in zip(layer_dims, activations):
             layers.append(get_activation(act_name))
             layers.append(nn.Dropout(dropout))
             layers.append(nn.Linear(dim, next_dim))
             dim = next_dim
 
+        #Add output layer
+        layers.append(get_activation(activations[-1]))
+        layers.append(nn.Dropout(dropout))
         layers.append(nn.Linear(dim, 1))
 
         self.model = nn.Sequential(*layers)
