@@ -15,6 +15,8 @@ def data_load(
         organism_column: Optional[str | int] = None,
         normalizer_path: Optional[str] = None,
         output_column: Optional[int | str] = None,
+        train_test_column: Optional[str] = None,
+        train_test_value: Optional[str] = None,
         ) -> tuple[np.ndarray, Optional[np.ndarray], Optional[np.ndarray]]:
     
     """
@@ -23,11 +25,13 @@ def data_load(
     Parameters:
         data_path (str): Path to the CSV file containing the data.
         features_start (int | str, optional): Index or name of the first feature column. Defaults to 0.
-        features_end (Optional[int | str], optional): Index or name of the last feature column (exclusive). If None, uses all columns to the end.
-        organism_encoder_path (Optional[str], optional): Path to the file containing the organism encoder. If None, organism encoding is skipped.
-        organism_column (Optional[str | int], optional): Name or index of the column containing organism information. If None, organism encoding is skipped.
-        normalizer_path (Optional[str], optional): Path to the normalizer file. If provided, features are normalized. Defaults to None.
-        output_column (Optional[int | str], optional): Name or index of the output/label column. If None, output labels are not extracted.
+        features_end (int | str, optional): Index or name of the last feature column (exclusive). If None, uses all columns to the end.
+        organism_encoder_path (str, optional): Path to the file containing the organism encoder. If None, organism encoding is skipped.
+        organism_column (str | int, optional): Name or index of the column containing organism information. If None, organism encoding is skipped.
+        normalizer_path (str, optional): Path to the normalizer file. If provided, features are normalized. Defaults to None.
+        output_column (int | str, optional): Name or index of the output/label column. If None, output labels are not extracted.
+        train_test_column (str, optional): Name of the column used to split data into train/test sets. If None, no split is performed.
+        train_test_value (str, optional): Value in train_test_column to filter rows (e.g., "train" or "test"). Used only if train_test_column is provided.
 
     Returns:
         tuple[np.ndarray, Optional[np.ndarray], Optional[np.ndarray]]:
@@ -48,10 +52,16 @@ def data_load(
             organism_encoder_path="encoder.pkl",
             organism_column="organism",
             normalizer_path="normalizer.pkl",
-            output_column="label"
+            output_column="label",
+            train_test_column="split",
+            train_test_value="train"
         )
     """
     data = pd.read_csv(data_path)
+
+    if train_test_column is not None:
+        data = train_test_split(data, train_test_column, train_test_value)
+
     embeddings_array = get_features_array(data, features_start, features_end)
     if normalizer_path is not None:
         embeddings_array = normalize(embeddings_array, normalizer_path)
@@ -61,6 +71,21 @@ def data_load(
     output_array = None if output_column is None else data[output_column].values
 
     return embeddings_array, organism_array, output_array
+
+def train_test_split(df: pd.DataFrame, column_name: str, value: str) -> pd.DataFrame:
+    """
+    Filters the input DataFrame by selecting rows where the specified column matches the given value.
+
+    Args:
+        df (pd.DataFrame): The input DataFrame to filter.
+        column_name (str): The name of the column to apply the filter on.
+        value (str): The value to match in the specified column.
+
+    Returns:
+        pd.DataFrame: A DataFrame containing only the rows where the specified column equals the given value.
+    """
+
+    return df[df[column_name].astype(str).eq(value)]
 
 
 def get_features_array(

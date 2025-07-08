@@ -1,4 +1,6 @@
 import os
+
+import pandas as pd
 from script.utils import data_load
 
 def test_only_data():
@@ -58,3 +60,20 @@ def test_with_normalization():
     os.remove("data/test/normalizer.pkl")
     assert emb1.shape == emb2.shape
     assert (emb1!=emb2).all()
+
+def test_train_test_split():
+    emb, ocodes, labels = data_load.data_load(
+        "data/test/grover.csv",
+        "grover_0",
+        organism_column="target_organism",
+        organism_encoder_path="data/test/test_encoder.pkl",
+        normalizer_path="data/test/normalizer.pkl",
+        output_column="pIC50",
+        train_test_column="train",
+        train_test_value="True"
+    )
+    df = pd.read_csv("data/test/grover.csv")
+    num_train = df[df.train].shape[0]
+    assert emb.shape[0] == ocodes.shape[0] == labels.shape[0] == num_train
+    os.remove("data/test/test_encoder.pkl")
+    os.remove("data/test/normalizer.pkl")
