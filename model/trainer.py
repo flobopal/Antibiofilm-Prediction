@@ -93,6 +93,26 @@ class Trainer:
             'regression',
             num_epochs=self.num_epochs,
             scheduler_name=self.scheduler_name,
-            schedurer_kwargs=self.schedurer_kwargs,
+            scheduler_kwargs=self.scheduler_kwargs,
+            verbose=self.verbose
+        )
+
+    def cross_validation(self, kfolds: int = 5):
+        return cross_validate_model(
+            FullModel,
+            dict(
+                mo_params = self.get_interaction_params(),
+                ff_params = self.get_ff_params()
+            ),
+            self.Xd,
+            self.Xp,
+            self.y,
+            Adam,
+            {'lr': self.lr},
+            'regression',
+            k_folds=kfolds,
+            num_epochs=self.num_epochs,
+            scheduler_name=self.scheduler_name,
+            scheduler_kwargs=self.scheduler_kwargs,
             verbose=self.verbose
         )
