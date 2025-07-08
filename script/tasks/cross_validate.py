@@ -1,3 +1,4 @@
+from typing import Optional
 from sklearn.model_selection import KFold
 from torch.utils.data import TensorDataset, DataLoader, Subset
 import torch
@@ -18,6 +19,7 @@ def cross_validate_model(
     k_folds: int = 5,
     num_epochs: int = 50,
     scheduler_name: str = None,
+    scheduler_kwargs: Optional[dict] = None,
     batch_size: int = 64,
     verbose: bool = True
 ):
@@ -71,6 +73,7 @@ def cross_validate_model(
             use_logits=use_logits,
             num_epochs=num_epochs,
             scheduler_name=scheduler_name,
+            scheduler_kwargs=scheduler_kwargs,
             verbose=verbose
         )
 
