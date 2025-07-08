@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import joblib
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
+import torch
 
 def data_load(
               
@@ -17,7 +18,7 @@ def data_load(
         output_column: Optional[int | str] = None,
         train_test_column: Optional[str] = None,
         train_test_value: Optional[str] = None,
-        ) -> tuple[np.ndarray, Optional[np.ndarray], Optional[np.ndarray]]:
+        ) -> tuple[torch.Tensor, Optional[torch.Tensor], Optional[torch.Tensor]]:
     
     """
     Loads and processes data from a CSV file for downstream machine learning tasks.
@@ -34,10 +35,10 @@ def data_load(
         train_test_value (str, optional): Value in train_test_column to filter rows (e.g., "train" or "test"). Used only if train_test_column is provided.
 
     Returns:
-        tuple[np.ndarray, Optional[np.ndarray], Optional[np.ndarray]]:
-            - embeddings_array: Numpy array of feature embeddings.
-            - organism_array: Numpy array of encoded organism information if organism_column and organism_encoder_path are provided, otherwise None.
-            - output_array: Numpy array of output labels if output_column is provided, otherwise None.
+        tuple[torch.Tensor, Optional[torch.Tensor], Optional[torch.Tensor]]:
+            - embeddings_array: torch tensor of feature embeddings.
+            - organism_array: torch tensor of encoded organism information if organism_column and organism_encoder_path are provided, otherwise None.
+            - output_array: torch tensor of output labels if output_column is provided, otherwise None.
 
     Raises:
         FileNotFoundError: If the data file does not exist.
@@ -65,12 +66,14 @@ def data_load(
     embeddings_array = get_features_array(data, features_start, features_end)
     if normalizer_path is not None:
         embeddings_array = normalize(embeddings_array, normalizer_path)
-    organism_array = None
+    embeddings_tensor = torch.from_numpy(embeddings_array).float()
+    organism_tensor = None
     if organism_column is not None:
         organism_array = encode_organism(data[organism_column], organism_encoder_path)
+        organism_tensor = torch.from_numpy(organism_array).float()
     output_array = None if output_column is None else data[output_column].values
-
-    return embeddings_array, organism_array, output_array
+    output_tensor = torch.from_numpy(output_array).float() if output_array is not None else None
+    return embeddings_tensor, organism_tensor, output_tensor
 
 def train_test_split(df: pd.DataFrame, column_name: str, value: str) -> pd.DataFrame:
     """
