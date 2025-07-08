@@ -122,24 +122,26 @@ def get_criterion(
 def train_model(
     model: nn.Module,
     train_loader: DataLoader,
-    val_loader: DataLoader,
+    val_loader: Optional[DataLoader],
     optimizer: torch.optim.Optimizer,
     task_type: Literal['regression', 'binary', 'multiclass'],
     use_logits: bool = True,
     num_epochs: int = 50,
     scheduler_name: Optional[str] = None,
+    schedurer_kwargs: Optional[dict] = None,
     verbose: bool = True
 ):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = model.to(device)
 
     criterion = get_criterion(task_type, use_logits)
+    scheduler = get_scheduler(optimizer, scheduler_name, **schedurer_kwargs or {})
 
     for epoch in range(num_epochs):
         train_loss = train_one_epoch(model, train_loader, criterion, optimizer, device)
-        val_loss = validate_one_epoch(model, val_loader, criterion, device)
+        if val_loader is not None:
+            val_loss = validate_one_epoch(model, val_loader, criterion, device)
 
-        scheduler = get_scheduler(criterion, scheduler_name)
 
         if scheduler:
             if scheduler_name == 'reduceonplateau':
@@ -148,4 +150,7 @@ def train_model(
                 scheduler.step()
 
         if verbose:
-            print(f"Epoch {epoch+1}/{num_epochs} - Train Loss: {train_loss:.4f} - Val Loss: {val_loss:.4f}")
+            if  val_loader is None:
+                print(f"Epoch {epoch+1}/{num_epochs} - Train Loss: {train_loss:.4f}")
+            else:
+                print(f"Epoch {epoch+1}/{num_epochs} - Train Loss: {train_loss:.4f} - Val Loss: {val_loss:.4f}")
