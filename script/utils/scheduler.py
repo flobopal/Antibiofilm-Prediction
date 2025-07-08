@@ -26,6 +26,6 @@ def get_scheduler(optimizer, scheduler_name: Optional[str], **kwargs) -> Optiona
         return lr_scheduler.CosineAnnealingLR(optimizer, **kwargs)
     if name == 'reduceonplateau':
         return lr_scheduler.ReduceLROnPlateau(optimizer, **kwargs)
-    if name == 'none' or name:
+    if name == 'none':
         return None
     raise ValueError(f"Scheduler '{scheduler_name}' no soportado.")
