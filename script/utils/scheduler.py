@@ -1,7 +1,7 @@
 from typing import Optional
 import torch.optim.lr_scheduler as lr_scheduler
 
-def get_scheduler(optimizer, scheduler_name: str, **kwargs) -> Optional[lr_scheduler.LRScheduler]:
+def get_scheduler(optimizer, scheduler_name: Optional[str], **kwargs) -> Optional[lr_scheduler.LRScheduler]:
     """
     Returns a PyTorch scheduler according to the given name and additional parameters.
 
@@ -14,17 +14,18 @@ def get_scheduler(optimizer, scheduler_name: str, **kwargs) -> Optional[lr_sched
     Returns:
         PyTorch scheduler or None if 'none' is specified.
     """
+    if scheduler_name is None:
+        return None
     name = scheduler_name.lower()
 
     if name == 'step':
         return lr_scheduler.StepLR(optimizer, **kwargs)
-    elif name == 'exponential':
+    if name == 'exponential':
         return lr_scheduler.ExponentialLR(optimizer, **kwargs)
-    elif name == 'cosine':
+    if name == 'cosine':
         return lr_scheduler.CosineAnnealingLR(optimizer, **kwargs)
-    elif name == 'reduceonplateau':
+    if name == 'reduceonplateau':
         return lr_scheduler.ReduceLROnPlateau(optimizer, **kwargs)
-    elif name == 'none':
+    if name == 'none' or name:
         return None
-    else:
-        raise ValueError(f"Scheduler '{scheduler_name}' no soportado.")
+    raise ValueError(f"Scheduler '{scheduler_name}' no soportado.")
