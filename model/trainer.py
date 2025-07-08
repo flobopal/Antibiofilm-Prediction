@@ -12,6 +12,35 @@ from script.tasks.cross_validate import cross_validate_model
 
 @dataclass
 class Trainer:
+    """
+    Trainer class for managing the training process of a molecule-organism interaction model.
+    Attributes:
+        Xd (torch.Tensor): Tensor containing molecular features.
+        Xp (torch.Tensor): Tensor containing organism features.
+        y (torch.Tensor): Tensor containing target values.
+        embed_dim (int): Embedding dimension for interaction layers.
+        hidden_dims (list[int]): List of hidden layer dimensions for the feedforward network.
+        activations (Union[str, list[str]]): Activation function(s) for the feedforward network. Default is 'relu'.
+        num_heads (int): Number of attention heads in the interaction module. Default is 4.
+        pooling (Literal['linear', 'max', 'mean']): Pooling strategy for interaction outputs. Default is 'max'.
+        dropout (float): Dropout rate applied in the model. Default is 0.1.
+        lr (float): Learning rate for the optimizer. Default is 0.001.
+        num_epochs (int): Number of training epochs. Default is 50.
+        scheduler_name (Optional[str]): Name of the learning rate scheduler to use. Default is None.
+        scheduler_kwargs (Optional[dict]): Additional keyword arguments for the scheduler. Default is None.
+        verbose (bool): Whether to print training progress. Default is True.
+    Methods:
+        get_interaction_params() -> MoleculeOrganismInteractionParams:
+            Returns the parameters required to initialize the molecule-organism interaction module.
+        get_ff_params() -> FeedForwardNetworkParams:
+            Returns the parameters required to initialize the feedforward network.
+        get_model() -> FullModel:
+            Constructs and returns the full model using the specified parameters.
+        get_loader() -> DataLoader:
+            Creates and returns a DataLoader for the training data.
+        train():
+            Trains the model using the specified configuration and optimizer.
+    """
     Xd: torch.Tensor
     Xp: torch.Tensor
     y: torch.Tensor
