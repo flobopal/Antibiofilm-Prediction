@@ -114,7 +114,7 @@ def get_features_array(
         raise ValueError("features_end should be None or the same type as features_start")
     
     if isinstance(features_start, int):
-        return df.loc[features_start: features_end].values    
+        return df.iloc[:,features_start: features_end].values    
     if features_end is None:
         return df.loc[:, features_start:].values    
     return df.loc[:, features_start:features_end]
