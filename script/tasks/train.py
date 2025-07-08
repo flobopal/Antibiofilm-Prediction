@@ -128,14 +128,14 @@ def train_model(
     use_logits: bool = True,
     num_epochs: int = 50,
     scheduler_name: Optional[str] = None,
-    schedurer_kwargs: Optional[dict] = None,
+    scheduler_kwargs: Optional[dict] = None,
     verbose: bool = True
 ):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = model.to(device)
 
     criterion = get_criterion(task_type, use_logits)
-    scheduler = get_scheduler(optimizer, scheduler_name, **schedurer_kwargs or {})
+    scheduler = get_scheduler(optimizer, scheduler_name, **scheduler_kwargs or {})
 
     for epoch in range(num_epochs):
         train_loss = train_one_epoch(model, train_loader, criterion, optimizer, device)
