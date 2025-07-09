@@ -97,7 +97,7 @@ class Trainer:
             verbose=self.verbose
         )
 
-    def cross_validation(self, kfolds: int = 5):
+    def cross_validation(self, kfolds: int = 5) -> list[float]:
         return cross_validate_model(
             FullModel,
             dict(
