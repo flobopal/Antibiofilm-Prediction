@@ -103,7 +103,7 @@ class Objective:
                     list_names()
                 )
             )
-        hidden_dims.append(trial.suggest_categorical("final_activation", list_names()))
+        activations.append(trial.suggest_categorical("final_activation", list_names()))
         num_heads = 2**trial.suggest_int("log2_num_heads", 0, 6)
         pooling = trial.suggest_categorical("pooling", ['mean', 'max', 'linear'])
         dropout = trial.suggest_float('dropout', 0, 0.15)
