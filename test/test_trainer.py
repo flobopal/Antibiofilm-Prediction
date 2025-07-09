@@ -1,5 +1,5 @@
 import torch
-from model.trainer import Trainer
+from model.train_and_optimize.trainer import Trainer
 
 class DummyInteractionParams:
     def __init__(self, **kwargs):
