@@ -86,10 +86,10 @@ class Trainer:
 
     def train(self):
         train_model(
-            self.get_model(),
+            model := self.get_model(),
             self.get_loader(),
             None,
-            Adam(lr = self.lr),
+            Adam(model.parameters(), lr = self.lr),
             'regression',
             num_epochs=self.num_epochs,
             scheduler_name=self.scheduler_name,
