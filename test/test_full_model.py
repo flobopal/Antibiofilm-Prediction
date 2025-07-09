@@ -28,7 +28,7 @@ def test_fullmodel_output_shape():
     Xd = torch.randn(batch_size, fd)
     Xp = torch.randn(batch_size, fo)
     out = model(Xd, Xp)
-    assert out.shape == (batch_size, 1), f"Expected output shape (batch, 3), got {out.shape}"
+    assert out.shape == (batch_size,), f"Expected output shape {(batch_size,)}, got {out.shape}"
 
 def test_fullmodel_forward_backward():
     batch_size = 4
@@ -89,3 +89,16 @@ def test_fullmodel_from_params_consistency():
     model = FullModel(mo_params, ff_params)
     assert isinstance(model.mo, nn.Module)
     assert isinstance(model.ff, nn.Module)
+
+def test_save_and_load(tmp_path):
+    model = make_model(8, 8)
+    Xd = torch.randn(2,8)
+    Xp = torch.randn(2,8)
+    model_path = tmp_path / "checkpoint.pth"
+    original_output = model(Xd, Xp)
+    model.save(model_path)
+    loaded_model = FullModel.load(model_path)
+    loaded_output = loaded_model(Xd, Xp)
+    assert torch.allclose(original_output, loaded_output)
+    checkpoint = torch.load(model_path, weights_only=True)
+    assert isinstance(checkpoint['ff_params'], dict)

@@ -1,7 +1,7 @@
 from typing import List, Self, Union
 import torch.nn as nn
 from script.utils.activation_functions import get_activation
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 
 @dataclass
 class FeedForwardNetworkParams:
@@ -9,6 +9,13 @@ class FeedForwardNetworkParams:
     hidden_dims: list[int]
     activations: Union[str, List[str]]
     dropout: float = 0.1
+
+    def asdict(self):
+        return asdict(self)
+    
+    @classmethod
+    def fromdict(cls, dict):
+        return cls(**dict)
 
 class FeedForwardNetwork(nn.Module):
     """

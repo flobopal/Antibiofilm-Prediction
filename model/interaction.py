@@ -2,7 +2,7 @@ from typing import Literal, Self
 import torch
 import torch.nn as nn
 
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 
 @dataclass
 class MoleculeOrganismInteractionParams:
@@ -12,6 +12,13 @@ class MoleculeOrganismInteractionParams:
     num_heads: int = 4
     pooling: Literal['linear', 'max', 'mean'] = 'max'
     dropout: float = 0.1
+
+    def asdict(self):
+        return asdict(self)
+    
+    @classmethod
+    def fromdict(cls, dict):
+        return cls(**dict)
 
 
 class MoleculeOrganismInteraction(nn.Module):
