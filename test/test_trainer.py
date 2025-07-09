@@ -18,9 +18,9 @@ class DummyModel(torch.nn.Module):
 
 def test_trainer_init_and_getters(monkeypatch):
     # Patch imported classes to avoid dependency issues
-    monkeypatch.setattr("model.trainer.MoleculeOrganismInteractionParams", DummyInteractionParams)
-    monkeypatch.setattr("model.trainer.FeedForwardNetworkParams", DummyFFParams)
-    monkeypatch.setattr("model.trainer.FullModel", DummyModel)
+    monkeypatch.setattr("model.train_and_optimize.trainer.MoleculeOrganismInteractionParams", DummyInteractionParams)
+    monkeypatch.setattr("model.train_and_optimize.trainer.FeedForwardNetworkParams", DummyFFParams)
+    monkeypatch.setattr("model.train_and_optimize.trainer.FullModel", DummyModel)
 
     Xd = torch.randn(8, 5)
     Xp = torch.randn(8, 3)
@@ -81,11 +81,11 @@ def test_train_calls_train_model(monkeypatch):
         assert task_type == 'regression'
         return "trained"
 
-    monkeypatch.setattr("model.trainer.MoleculeOrganismInteractionParams", DummyInteractionParams)
-    monkeypatch.setattr("model.trainer.FeedForwardNetworkParams", DummyFFParams)
-    monkeypatch.setattr("model.trainer.FullModel", DummyModel)
-    monkeypatch.setattr("model.trainer.FullModel", DummyModel)
-    monkeypatch.setattr("model.trainer.train_model", dummy_train_model)
+    monkeypatch.setattr("model.train_and_optimize.trainer.MoleculeOrganismInteractionParams", DummyInteractionParams)
+    monkeypatch.setattr("model.train_and_optimize.trainer.FeedForwardNetworkParams", DummyFFParams)
+    monkeypatch.setattr("model.train_and_optimize.trainer.FullModel", DummyModel)
+    monkeypatch.setattr("model.train_and_optimize.trainer.FullModel", DummyModel)
+    monkeypatch.setattr("model.train_and_optimize.trainer.train_model", dummy_train_model)
 
     Xd = torch.randn(4, 2)
     Xp = torch.randn(4, 2)
@@ -110,10 +110,10 @@ def test_cross_validation_calls_cross_validate_model(monkeypatch):
         assert task_type == 'regression'
         return "cv_result"
 
-    monkeypatch.setattr("model.trainer.MoleculeOrganismInteractionParams", DummyInteractionParams)
-    monkeypatch.setattr("model.trainer.FeedForwardNetworkParams", DummyFFParams)
-    monkeypatch.setattr("model.trainer.FullModel", DummyModel)
-    monkeypatch.setattr("model.trainer.cross_validate_model", dummy_cross_validate_model)
+    monkeypatch.setattr("model.train_and_optimize.trainer.MoleculeOrganismInteractionParams", DummyInteractionParams)
+    monkeypatch.setattr("model.train_and_optimize.trainer.FeedForwardNetworkParams", DummyFFParams)
+    monkeypatch.setattr("model.train_and_optimize.trainer.FullModel", DummyModel)
+    monkeypatch.setattr("model.train_and_optimize.trainer.cross_validate_model", dummy_cross_validate_model)
 
     Xd = torch.randn(6, 2)
     Xp = torch.randn(6, 2)
