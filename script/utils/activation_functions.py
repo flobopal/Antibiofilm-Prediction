@@ -2,13 +2,14 @@ from typing import Callable
 import torch.nn as nn
 
 ACTIVATIONS = {
-        "relu": nn.ReLU,
-        "sigmoid": nn.Sigmoid,
-        "tanh": nn.Tanh,
-        "leaky_relu": nn.LeakyReLU,
-        "gelu": nn.GELU,
-        "elu": nn.ELU,
-    }
+    "relu": nn.ReLU,
+    "sigmoid": nn.Sigmoid,
+    "tanh": nn.Tanh,
+    "leaky_relu": nn.LeakyReLU,
+    "gelu": nn.GELU,
+    "elu": nn.ELU,
+    "identity": nn.Identity,
+}
 
 def get_activation(name : str) -> Callable:
     """
