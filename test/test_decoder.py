@@ -15,7 +15,7 @@ def test_feedforward_output_shape():
     out = model(x)
 
     # Output shape debe ser (batch_size, 1)
-    assert out.shape == (batch_size, 1)
+    assert out.shape == (batch_size,)
 
 def test_feedforward_forward_runs_without_error():
     model = FeedForwardNetwork(8, [16, 8], ['relu', 'relu', 'tanh'], 0.1)

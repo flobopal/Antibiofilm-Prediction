@@ -87,7 +87,7 @@ def test_train_model_runs():
         use_logits=False,
         num_epochs=2,
         scheduler_name="step",
-        schedurer_kwargs={'step_size':10},
+        scheduler_kwargs={'step_size':10},
         verbose=False
     )
 
@@ -105,6 +105,6 @@ def test_without_validation():
         use_logits=False,
         num_epochs=2,
         scheduler_name="step",
-        schedurer_kwargs={'step_size':10},
+        scheduler_kwargs={'step_size':10},
         verbose=False
     )
