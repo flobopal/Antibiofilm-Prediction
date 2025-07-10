@@ -97,7 +97,9 @@ class Trainer:
             verbose=self.verbose
         )
 
-    def cross_validation(self, kfolds: int = 5) -> list[float]:
+    def cross_validation(self,
+                         kfolds: int = 5,
+                         metrics: Optional[str]=None) -> list[float]:
         return cross_validate_model(
             FullModel,
             dict(
@@ -114,5 +116,6 @@ class Trainer:
             num_epochs=self.num_epochs,
             scheduler_name=self.scheduler_name,
             scheduler_kwargs=self.scheduler_kwargs,
-            verbose=self.verbose
+            verbose=self.verbose,
+            metrics=metrics
         )
