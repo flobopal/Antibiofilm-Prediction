@@ -4,6 +4,7 @@ from torch.utils.data import TensorDataset, DataLoader, Subset
 import torch
 import numpy as np
 from script.tasks.train import train_model, get_criterion, validate_one_epoch
+from script.utils.metrics import evaluate
 
 def cross_validate_model(
     
@@ -21,7 +22,8 @@ def cross_validate_model(
     scheduler_name: str = None,
     scheduler_kwargs: Optional[dict] = None,
     batch_size: int = 64,
-    verbose: bool = True
+    verbose: bool = True,
+    metrics: Optional[str] = None
 ):
     """
     Performs K-fold cross-validation on a given PyTorch model.
@@ -80,8 +82,12 @@ def cross_validate_model(
         # Final fold validation
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         model.eval()
-        criterion = get_criterion(task_type, use_logits)
-        val_loss = validate_one_epoch(model, val_loader, criterion, device)
-        val_losses.append(val_loss)
+        if metrics:
+            y_pred = model(Xd, Xp)
+            val_losses.append(evaluate(metrics, y, y_pred))
+        else:
+            metrics = get_criterion(task_type, use_logits)
+            val_loss = validate_one_epoch(model, val_loader, metrics, device)
+            val_losses.append(val_loss)
 
     return val_losses

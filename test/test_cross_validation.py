@@ -60,3 +60,23 @@ def test_cross_validate_invalid_task_type():
             optimizer_class=torch.optim.Adam,
             optimizer_kwargs={"lr": 0.01},
         )
+
+def test_metrics():
+    Xd, Xp, y = generate_dummy_data(n_samples=100)
+    losses = cross_validate_model(
+        model_class=DummyModel,
+        model_kwargs={"input_size_d": 10, "input_size_p": 15, "hidden_size": 16},
+        Xd=Xd,
+        Xp=Xp,
+        y=y,
+        task_type="regression",
+        optimizer_class=torch.optim.Adam,
+        optimizer_kwargs={"lr": 0.01},
+        num_epochs=3,
+        batch_size=16,
+        k_folds=3,
+        metrics="r2"
+    )
+    assert len(losses) == 3
+    assert all(isinstance(loss, float) for loss in losses)
+    assert False
