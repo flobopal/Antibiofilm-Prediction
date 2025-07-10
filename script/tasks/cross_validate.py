@@ -83,7 +83,7 @@ def cross_validate_model(
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         model.eval()
         if metrics is not None:
-            Xd_test, Xp_test, y_test = val_loader[:]
+            Xd_test, Xp_test, y_test = map(torch.cat,zip(*list(val_loader)))
             y_pred = model(Xd_test.to(device), Xp_test.to(device))
             val_losses.append(evaluate(metrics, y_test, y_pred))
         else:
