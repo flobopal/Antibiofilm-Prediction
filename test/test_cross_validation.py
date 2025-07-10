@@ -79,4 +79,3 @@ def test_metrics():
     )
     assert len(losses) == 3
     assert all(isinstance(loss, float) for loss in losses)
-    assert False
