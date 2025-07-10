@@ -82,10 +82,11 @@ class Objective:
             Returns:
                 float: Average cross-validation score (mean of 3 folds).
     """
-    def __init__(self, Xd, Xp, y):
+    def __init__(self, Xd, Xp, y, metrics):
         self.Xd = Xd
         self.Xp = Xp
         self.y = y
+        self.metrics = metrics
     def __call__(self, trial: optuna.Trial) -> float:
         clean()
         # Tuneable params
@@ -132,7 +133,7 @@ class Objective:
             scheduler_kwargs=scheduler_kwargs)
         
         # Cross validations
-        vals = model.cross_validation(3)
+        vals = model.cross_validation(3, metrics = self.metrics)
         return sum(vals) / 3
 
 
@@ -161,9 +162,9 @@ def do_study(Xd, Xp, y, name: str= "model_optimization", n_trials=50, database: 
         database = f"sqlite:///{name}.db"
 
     study = optuna.create_study(
-        direction="minimize",
+        direction="maximize",
         study_name=name,
         storage=database,
         load_if_exists=True)
-    study.optimize(Objective(Xd, Xp, y), n_trials=n_trials)
+    study.optimize(Objective(Xd, Xp, y, 'r2'), n_trials=n_trials)
     return study
