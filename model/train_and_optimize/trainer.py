@@ -56,7 +56,7 @@ class Trainer:
     scheduler_kwargs: Optional[dict] = None
     verbose: bool = True
     last_activation_params: Optional[dict] = None
-    bach_size: int = 64
+    batch_size: int = 64
 
     def get_interaction_params(self) -> MoleculeOrganismInteractionParams:
         return MoleculeOrganismInteractionParams(
