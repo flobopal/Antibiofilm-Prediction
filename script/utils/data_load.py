@@ -15,6 +15,8 @@ def data_load(
         organism_encoder_path: Optional[str] = None,
         organism_column: Optional[str | int] = None,
         normalizer_path: Optional[str] = None,
+        normalizer_start: Optional[int] = None,
+        normalizer_end: Optional[int] = None,
         output_column: Optional[int | str] = None,
         train_test_column: Optional[str] = None,
         train_test_value: Optional[str] = None,
@@ -65,7 +67,7 @@ def data_load(
 
     embeddings_array = get_features_array(data, features_start, features_end)
     if normalizer_path is not None:
-        embeddings_array = normalize(embeddings_array, normalizer_path)
+        embeddings_array= normalize(embeddings_array, normalizer_path, normalizer_start, normalizer_end)
     embeddings_tensor = torch.from_numpy(embeddings_array).float()
     organism_tensor = None
     if organism_column is not None:
@@ -119,7 +121,11 @@ def get_features_array(
         return df.loc[:, features_start:].values    
     return df.loc[:, features_start:features_end]
 
-def normalize(data: np.ndarray, normalizer_path: str) -> np.ndarray:
+def normalize(
+        data: np.ndarray,
+        normalizer_path: str,
+        normalizer_start: int = None,
+        normalizer_end: int = 0) -> np.ndarray:
     """
     Normalizes the input data using a StandardScaler. If a normalizer exists at the specified path,
     it loads and applies it; otherwise, it fits a new scaler, saves it, and applies it.
@@ -129,12 +135,17 @@ def normalize(data: np.ndarray, normalizer_path: str) -> np.ndarray:
     Returns:
         np.ndarray: The normalized data.
     """
+    data_to_normalize = data[:,normalizer_start:normalizer_end]
+    output = data.copy()
     if os.path.exists(normalizer_path):
         normalizer: StandardScaler = joblib.load(normalizer_path)
-        return normalizer.transform(data)
+        normalized_data = normalizer.transform(data_to_normalize)
+        output[:,normalizer_start:normalizer_end] = normalized_data
+        return output
     
     normalizer = StandardScaler()
-    output = normalizer.fit_transform(data)
+    normalized_data = normalizer.fit_transform(data_to_normalize)
+    output[:,normalizer_start:normalizer_end] = normalized_data
     joblib.dump(normalizer, normalizer_path)
     return output
 
