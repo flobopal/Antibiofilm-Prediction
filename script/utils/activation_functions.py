@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, Optional
 import torch.nn as nn
 
 ACTIVATIONS = {
@@ -11,7 +11,7 @@ ACTIVATIONS = {
     "identity": nn.Identity,
 }
 
-def get_activation(name : str) -> Callable:
+def get_activation(name : str, params: Optional[dict] = None) -> Callable:
     """
     Retrieves an activation function by name.
     Args:
@@ -21,10 +21,10 @@ def get_activation(name : str) -> Callable:
     Raises:
         ValueError: If the specified activation function name is not recognized.
     """
-    
+    params = params or {}
     if name not in ACTIVATIONS:
         raise ValueError(f"Activation '{name}' not recognized")
-    return ACTIVATIONS[name]()
+    return ACTIVATIONS[name](**params)
 
 def list_names() -> list[str]:
     """

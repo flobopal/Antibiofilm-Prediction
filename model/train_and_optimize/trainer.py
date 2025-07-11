@@ -55,6 +55,8 @@ class Trainer:
     scheduler_name: Optional[str] = None
     scheduler_kwargs: Optional[dict] = None
     verbose: bool = True
+    last_activation_params: Optional[dict] = None
+    bach_size: int = 64
 
     def get_interaction_params(self) -> MoleculeOrganismInteractionParams:
         return MoleculeOrganismInteractionParams(
@@ -71,7 +73,8 @@ class Trainer:
             input_dims=self.Xd.shape[1],
             hidden_dims=self.hidden_dims,
             activations=self.activations,
-            dropout=self.dropout
+            dropout=self.dropout,
+            last_activation_params=self.last_activation_params
         )
     
     def get_model(self) -> FullModel:
@@ -82,9 +85,9 @@ class Trainer:
     
     def get_loader(self) -> DataLoader:
         dataset = TensorDataset(self.Xd, self.Xp, self.y)
-        return DataLoader(dataset)
+        return DataLoader(dataset, batch_size=self.bach_size)
 
-    def train(self):
+    def train(self, save_path: Optional[str] = None) -> torch.nn.Module:
         train_model(
             model := self.get_model(),
             self.get_loader(),
@@ -96,6 +99,11 @@ class Trainer:
             scheduler_kwargs=self.scheduler_kwargs,
             verbose=self.verbose
         )
+
+        if save_path is not None:
+            model.save(save_path)
+
+        return model
 
     def cross_validation(self,
                          kfolds: int = 5,

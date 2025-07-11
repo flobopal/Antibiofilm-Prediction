@@ -136,8 +136,59 @@ class Objective:
         vals = model.cross_validation(3, metrics = self.metrics)
         return sum(vals) / 3
 
+class new_Objective(Objective):
 
-def do_study(Xd, Xp, y, name: str= "model_optimization", n_trials=50, database: str=None):
+    def __call__(self, trial):
+        clean()
+         # Tuneable params
+        embed_dim = 2**trial.suggest_int("log2_embed_size", 6,9)
+        num_layers = 3
+        hidden_dims = [
+            trial.suggest_int(f"layer_0", 10, 40),
+            2**trial.suggest_int(f"log2_layer_1", 6, 9),
+            2**trial.suggest_int(f"log2_layer_2", 7, 9)
+        ]
+        activations = ['sigmoid', 'relu', 'gelu']
+        activations.append(trial.suggest_categorical("final_activation", ['elu', 'leaky_relu']))
+        if activations[-1] == 'elu':
+            last_activation_params = {
+                "alpha": trial.suggest_float("elu_alpha", 0.1, 10)
+            }
+        else:
+            last_activation_params = {
+                "negative_slope": trial.suggest_float("lRelu_slope", 1e-4, 1, log=True)
+            }
+        num_heads = trial.suggest_int("num_heads", 4, 16)
+        pooling = "max"
+        dropout = trial.suggest_float('dropout', 0.05, 0.20)
+        lr = trial.suggest_float('lr', 1e-6, 1e-4, log=True)
+        num_epochs = 2**trial.suggest_int('epochs', 9, 11)
+        scheduler_name = 'exponential'
+        scheduler_kwargs = {'gamma' : trial.suggest_float('gamma', 0.9, 1)}
+
+        # Create model
+        model = Trainer(
+            Xd=self.Xd,
+            Xp=self.Xp,
+            y=self.y,
+            embed_dim=embed_dim,
+            hidden_dims=hidden_dims,
+            activations=activations,
+            dropout=dropout,
+            num_heads=num_heads,
+            pooling=pooling,
+            num_epochs=num_epochs,
+            lr=lr,
+            scheduler_name=scheduler_name,
+            scheduler_kwargs=scheduler_kwargs,
+            last_activation_params=last_activation_params)
+        
+        # Cross validations
+        vals = model.cross_validation(3, metrics = self.metrics)
+        return sum(vals) / 3
+
+
+def do_study(Xd, Xp, y, name: str= "model_optimization", n_trials=50, database: str=None, objective=Objective):
     """
     Runs an Optuna hyperparameter optimization study for a given dataset and target.
 
@@ -166,5 +217,5 @@ def do_study(Xd, Xp, y, name: str= "model_optimization", n_trials=50, database: 
         study_name=name,
         storage=database,
         load_if_exists=True)
-    study.optimize(Objective(Xd, Xp, y, 'r2'), n_trials=n_trials)
+    study.optimize(objective(Xd, Xp, y, 'r2'), n_trials=n_trials)
     return study

@@ -1,4 +1,4 @@
-from typing import List, Self, Union
+from typing import List, Optional, Self, Union
 import torch.nn as nn
 from script.utils.activation_functions import get_activation
 from dataclasses import dataclass, asdict
@@ -9,6 +9,7 @@ class FeedForwardNetworkParams:
     hidden_dims: list[int]
     activations: Union[str, List[str]]
     dropout: float = 0.1
+    last_activation_params: Optional[dict] = None
 
     def asdict(self):
         return asdict(self)
@@ -49,7 +50,8 @@ class FeedForwardNetwork(nn.Module):
                  input_dim: int,
                  layer_dims: list[int],
                  activations: str|list[str],
-                 dropout: float=0.1):
+                 dropout: float=0.1,
+                 last_activation_params: Optional[dict] = None):
         super().__init__()
         if isinstance(activations, str):
             activations = [activations]*(len(layer_dims)+1)
@@ -66,7 +68,7 @@ class FeedForwardNetwork(nn.Module):
             dim = next_dim
 
         #Add output layer
-        layers.append(get_activation(activations[-1]))
+        layers.append(get_activation(activations[-1], last_activation_params))
         layers.append(nn.Dropout(dropout))
         layers.append(nn.Linear(dim, 1))
 
@@ -87,8 +89,9 @@ class FeedForwardNetwork(nn.Module):
                 input_dim=params.input_dims,
                 layer_dims=params.hidden_dims,
                 activations=params.activations,
-                dropout=params.dropout
-            )
+                dropout=params.dropout,
+                last_activation_params=params.last_activation_params
+        )
 
     def forward(self, x):
         return self.model(x).squeeze(-1)
