@@ -125,5 +125,6 @@ class Trainer:
             scheduler_name=self.scheduler_name,
             scheduler_kwargs=self.scheduler_kwargs,
             verbose=self.verbose,
-            metrics=metrics
+            metrics=metrics,
+            batch_size=self.batch_size
         )
