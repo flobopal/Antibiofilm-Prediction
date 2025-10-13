@@ -5,6 +5,25 @@ import torch
 import numpy as np
 from script.tasks.train import train_model, get_criterion, validate_one_epoch
 from script.utils.metrics import evaluate
+import gc
+import os
+
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+
+def clean():
+    """
+    Performs memory cleanup for both CPU and GPU.
+
+    This function triggers Python's garbage collector to free up unreferenced memory.
+    If a CUDA-capable GPU is available, it also clears the CUDA memory cache and
+    collects inter-process communication (IPC) resources to help prevent memory leaks
+    and fragmentation during intensive GPU computations.
+    """
+    gc.collect()
+    if not torch.cuda.is_available():
+        return
+    torch.cuda.empty_cache()
+    torch.cuda.ipc_collect()
 
 def cross_validate_model(
     
@@ -52,6 +71,7 @@ def cross_validate_model(
     val_losses = []
 
     for fold, (train_idx, val_idx) in enumerate(kf.split(Xd)):
+        clean()
         if verbose:
             print(f"\n--- Fold {fold + 1}/{k_folds} ---")
 
