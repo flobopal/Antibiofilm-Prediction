@@ -5,7 +5,7 @@ sys.path.append(os.getcwd())
 
 from script.utils.data_load import data_load
 from model.train_and_optimize.optimizer import do_study, Objective
-folder = Path("experiments", "hyperparameter_tuning")
+folder = Path("experiments", "01 hyperparameter_tuning")
 
 
 Xd, Xp, y = data_load("data/Antibiofilm data.csv", features_start=5, organism_encoder_path=folder / "encoder.pkl", organism_column='target_organism',

@@ -61,7 +61,6 @@ def data_load(
         )
     """
     data = pd.read_csv(data_path)
-
     if train_test_column is not None:
         data = train_test_split(data, train_test_column, train_test_value)
 

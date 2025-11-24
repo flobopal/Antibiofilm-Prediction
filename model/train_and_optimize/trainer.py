@@ -85,7 +85,7 @@ class Trainer:
     
     def get_loader(self) -> DataLoader:
         dataset = TensorDataset(self.Xd, self.Xp, self.y)
-        return DataLoader(dataset, batch_size=self.bach_size)
+        return DataLoader(dataset, batch_size=self.batch_size)
 
     def train(self, save_path: Optional[str] = None) -> torch.nn.Module:
         train_model(

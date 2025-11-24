@@ -96,7 +96,7 @@ class Objective:
         activations = []
         for layer_index in range(num_layers):
             hidden_dims.append(
-                2**trial.suggest_int(f"log2_layer_{layer_index}", 2, 8)
+                2**trial.suggest_int(f"log2_layer_{layer_index}", 2, 10)
             )
             activations.append(
                 trial.suggest_categorical(
