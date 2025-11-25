@@ -6,8 +6,7 @@ import numpy as np
 from script.utils.scheduler import get_scheduler
 
 def move_batch_to_device(
-    Xd: torch.Tensor,
-    Xp: torch.Tensor,
+    X: list[torch.Tensor],
     y: torch.Tensor,
     device: torch.device
 ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
@@ -23,7 +22,9 @@ def move_batch_to_device(
     Returns:
         tuple[torch.Tensor, torch.Tensor, torch.Tensor]: The input tensors moved to the specified device.
     """
-    return Xd.to(device), Xp.to(device), y.to(device)
+    output = [x.to(device) for x in X]
+    output.append(y.to(device))
+    return output
 
 
 def train_one_epoch(
@@ -48,10 +49,10 @@ def train_one_epoch(
     """
     model.train()
     total_loss = 0.0
-    for Xd, Xp, y in dataloader:
-        Xd, Xp, y = move_batch_to_device(Xd, Xp, y, device)
+    for *X, y in dataloader:
+        *X, y = move_batch_to_device(X, y, device)
         optimizer.zero_grad()
-        outputs = model(Xd, Xp)
+        outputs = model(*X)
         loss = criterion(outputs, y)
         loss.backward()
         optimizer.step()
@@ -79,9 +80,9 @@ def validate_one_epoch(
     model.eval()
     total_loss = 0.0
     with torch.no_grad():
-        for Xd, Xp, y in dataloader:
-            Xd, Xp, y = move_batch_to_device(Xd, Xp, y, device)
-            outputs = model(Xd, Xp)
+        for *X, y in dataloader:
+            *X, y = move_batch_to_device(X, y, device)
+            outputs = model(*X)
             loss = criterion(outputs, y)
             total_loss += loss.item()
     return total_loss / len(dataloader)
