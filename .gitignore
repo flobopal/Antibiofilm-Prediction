@@ -1,0 +1,5 @@
+private_data
+.pytest_cache
+.vscode
+*__pycache__
+*.db
