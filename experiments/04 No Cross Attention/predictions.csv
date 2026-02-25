@@ -1,0 +1,216 @@
+,target_organism,train,curated_smiles,pIC50,y_pred
+3218,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCc1[nH]c(=N)n(CC(=O)Nc2ccc(C)cc2)c1-c1ccccc1Br,1.5016894462103991,1.560952
+9448,Staphylococcus aureus,False,Oc1cc(Cl)ccc1Oc1ccc(Cl)cc1Cl,1.9661717321851848,2.1442876
+2491,Raoultella planticola,False,CO[C@@]12C(=COC(N)=O)c3c(O)c(N)c(C)c(O)c3N1C[C@@H]1N[C@@H]12,2.958607314841775,3.2586071
+319,Salmonella enterica subsp. enterica serovar Typhimurium,False,N=c1[nH]cc(-c2ccc(Cl)cc2)n1C1CCCCC1,1.4788619162959638,1.6323991
+508,Staphylococcus aureus,False,CC(C)[C@@H]1CC[C@@H](C)C[C@H]1OC(=O)NCCCCCCCc1c[nH]c(=N)[nH]1,1.2716462179787715,1.8664651
+2034,Escherichia coli,False,Cc1ccc(C2=CC(c3oc(CO)cc(=O)c3O)c3ccccc3O2)cc1,1.600124026784476,1.5800107
+9405,Staphylococcus aureus,False,CC1(C)C(c2cnc3c4ccccc4nn3c2)=Nc2ccc3ccccc3c21,0.8602613243620425,0.89973056
+3563,Staphylococcus aureus,False,Clc1ccc(-c2c[nH]c(=NCCCN=c3[nH]cc(-c4ccc(Cl)cc4)[nH]3)[nH]2)cc1,1.886056647693163,1.5277197
+3335,Staphylococcus aureus,False,N=c1nc(-c2c[nH]c3cc(I)ccc23)cc[nH]1,1.3716110699496884,1.4777379
+4980,Mycolicibacterium smegmatis,False,CCCCCc1ccc(C(=O)Nc2ccc3c(c2)[nH]c(=N)n3CCCc2cccc(Br)c2)cc1,2.036212172654445,2.1664374
+6067,Streptococcus mutans,False,COC(=O)c1ccccc1NC(=O)c1cnc2ccccc2c1,0.8486301497525393,1.5686871
+8819,Streptococcus mutans,False,COc1ccc(CNc2cc3c4c(cn(S(=O)(=O)c5ccc(C)cc5)c4c2O)CC=N3)cc1OC,2.585026652029182,2.5350652
+8145,Salmonella enterica subsp. enterica serovar Typhimurium,False,CN(Cc1ccsc1)CC1CCN(CCc2cccc3ccccc23)CC1,2.6020599913279625,1.884172
+351,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCCCC[n+]1c(-c2cccc3ccccc23)cn2cccnc21,2.221848749616356,1.8724624
+1898,Staphylococcus aureus,False,O=C(O)CC(=O)Nc1ccc(-c2nc3ccccc3[nH]2)cc1,1.3205721033878808,0.80801904
+3579,Raoultella planticola,False,CN1CCN(C(=O)c2nc(-c3ccccc3)c3c(C(F)(F)F)cc(-c4ccccc4)nc3n2)CC1,1.3445105295012,1.6890774
+3338,Staphylococcus aureus,False,CN(C)c1nccc(-c2c[nH]c3ccc(Br)cc23)n1,1.6307841425898577,1.5912776
+5555,Staphylococcus aureus,False,O=C(c1cc(Cl)cc(Cl)c1O)c1[nH]c(Cl)c(Br)c1Cl,4.607303046740334,3.3347833
+2492,Raoultella planticola,False,O=C1C=C(N2CC2)C(=O)C(c2cc(-c3ccc(C(=O)N4CCOCC4)s3)on2)=C1N1CC1,2.292429823902064,2.509419
+277,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCn1c(-c2ccc(-c3ccccc3)cc2)c[nH]c1=N,1.8538719643217616,1.4094155
+311,Salmonella enterica subsp. enterica serovar Typhimurium,False,N=c1[nH]cc(-c2ccccc2)n1C1CCC1,0.9344202852715516,0.68838406
+279,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCn1c(-c2ccc(-c3ccccc3)cc2)c[nH]c1=N,2.036212172654445,2.0695963
+783,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCCCCCCN1c2nccc[n+]2C[C@@]1(O)c1ccc(F)cc1,1.6989700043360187,1.964411
+904,Escherichia coli,False,O=C(O)C1CSc2c(-c3cn(Cc4ccccc4)nn3)c(Cc3cccc4ccccc34)cc(=O)n21,1.0,1.0600594
+1050,Staphylococcus aureus,False,CCCCCc1ccc(C(=O)NCCn2cc(CCCCCc3cn(CC(C)C)c(=N)[nH]3)nn2)cc1,1.6197887582883936,2.0272439
+5650,Escherichia coli,False,CC1(C)CC[C@]2(C(=O)O)CC[C@]3(C)C(=CC[C@@H]4[C@@]5(C)Cc6c[nH]nc6C(C)(C)[C@@H]5CC[C@]43C)[C@@H]2C1,2.078022487718808,1.8078034
+1131,Raoultella planticola,False,O=C(NCc1cn(Cc2ccc(F)c(Cl)c2)nn1)c1ccc([N+](=O)[O-])o1,1.4931207970321871,2.0074391
+788,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCCCCN1c2nccc[n+]2C[C@@]1(O)c1ccc([N+](=O)[O-])cc1,2.1804560644581312,1.7412306
+9411,Staphylococcus aureus,False,CC1(C)C(c2cnc3c4ccc(Br)cc4nn3c2)=Nc2c1ccc1ccccc21,0.9457954139780966,1.2692204
+6202,Mycolicibacterium smegmatis,False,N=c1nc(-c2c[nH]c3cc(Cl)ccc23)cc[nH]1,1.575118363368933,1.796615
+6093,Streptococcus mutans,False,COC(=O)c1cccc(NC(=O)c2cc3cc([N+](=O)[O-])ccc3o2)c1,2.5686362358410126,1.0129904
+639,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCCCCN=c1[nH]cc(-c2cccc3ccccc23)[nH]1,0.622693748931801,1.7657897
+5630,Escherichia coli,False,CNC(=O)C1C[C@]2(C)[C@H]3CC=C4[C@@H]5CC(C)(C)CC[C@]5(C(=O)O)CC[C@@]4(C)[C@]3(C)CC[C@H]2C(C)(C)[C@H]1O,2.108702832863871,2.0993502
+1969,Bacillus subtilis,False,CCCCCCC(C/C=C\CCCCCCCC(=O)OC)N=Cc1c[nH]c2ccccc12,1.6595558851598815,1.9468778
+3158,Pseudoalteromonas ulvae,False,COc1cccc(-n2cc(C(=O)NCCc3ccc(O)cc3)nn2)c1,0.6897316333675523,0.91347826
+6078,Streptococcus mutans,False,COc1ccc2[nH]c(C(=O)Nc3cccc(C(N)=O)c3)cc2c1,1.247183568811728,1.1789273
+1706,Staphylococcus aureus,False,CCCCCc1ccc(C(=O)Nc2ccc3c(c2)[nH]c(=N)n3C2CCCC2)cc1,2.3665315444204134,2.0200608
+588,Salmonella enterica subsp. enterica serovar Typhimurium,False,Clc1ccc(-c2c[nH]c(=NCc3ccccc3)[nH]2)cc1,1.512437439743621,1.8903085
+3516,Escherichia coli,False,Brc1ccc(-c2c[nH]c(=NCCCCN=c3[nH]cc(-c4ccc(Br)cc4)[nH]3)[nH]2)cc1,2.1426675035687315,2.098445
+8168,Salmonella enterica subsp. enterica serovar Typhimurium,False,CN(Cc1ccsc1)CC1CCN(CCc2ccc(Cl)c(Cl)c2)CC1,1.346787486224656,1.8143296
+1126,Raoultella planticola,False,COc1ccc(Cn2cc(CNC(=O)c3ccc([N+](=O)[O-])o3)nn2)cc1O,1.519008630285648,1.2802532
+3501,Escherichia coli,False,Fc1ccc(-c2c[nH]c(=NCCCCCCCN=c3[nH]cc(-c4ccc(F)cc4)[nH]3)[nH]2)cc1,2.0,1.5890923
+3254,Staphylococcus aureus,False,Cc1ccc(NC(=O)Cn2c(-c3ccccc3Br)c(Cc3ccc(C(C)(C)C)cc3)[nH]c2=N)cc1,2.408935392973501,1.6495583
+3377,Salmonella enterica subsp. enterica serovar Typhimurium,False,N=c1[nH]cc(-c2ccc(F)cc2)n1CCCCCCCn1c(-c2ccc(F)cc2)c[nH]c1=N,2.537602002101044,2.3623934
+3551,Staphylococcus aureus,False,c1ccc(-c2c[nH]c(=NCCCN=c3[nH]cc(-c4ccccc4)[nH]3)[nH]2)cc1,0.5228787452803374,1.2261153
+2763,Staphylococcus aureus,False,N=c1[nH]cc([C@@H]2[C@@H](CNC(=O)c3cc(Br)c[nH]3)[C@H](CNC(=O)c3cc(Br)c[nH]3)[C@H]2c2c[nH]c(=N)[nH]2)[nH]1,1.4248121550723392,1.9657698
+6047,Streptococcus mutans,False,COC(=O)c1ccc(NC(=O)c2ccc3ccccc3c2)cc1,0.9519468268843908,0.860549
+3716,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCCn1c(=N)[nH]c2cc(NC(=O)c3ccc(CCCCC)cc3)ccc21,1.9665762445130504,2.0485146
+1133,Raoultella planticola,False,O=C(NCc1cn(Cc2ccc([N+](=O)[O-])cc2)nn1)c1ccc([N+](=O)[O-])o1,1.3180365056717651,1.6614808
+5986,Bacillus subtilis,False,COc1ccc(-n2cc(COc3ccc(/C=N/N=c4[nH]c(-c5cc6cccc(Br)c6oc5=O)cs4)cc3)nn2)cc1,1.4509967379742124,1.5544457
+810,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCCCCCCCCN1c2nccc[n+]2C[C@@]1(O)c1ccccc1,1.5606673061697371,1.1057379
+332,Salmonella enterica subsp. enterica serovar Typhimurium,False,N=c1[nH]cc(-c2ccc(F)cc2)n1Cc1ccccc1,1.4282911681913122,0.71157354
+3412,Salmonella enterica subsp. enterica serovar Typhimurium,False,Brc1ccc(-c2c[nH]c(=NCCCCCCCCN=c3[nH]cc(-c4ccc(Br)cc4)[nH]3)[nH]2)cc1,1.5044556624535517,1.4615655
+706,Salmonella enterica subsp. enterica serovar Typhimurium,False,O[C@@]1(c2ccc(Cl)cc2)C[n+]2cccnc2N1C1CCCCCCCCCCC1,2.2518119729938,1.5447618
+5054,Staphylococcus aureus,False,CC[C@H](C)C(NC(=O)[C@H](CC(C)C)NC(=O)[C@H](CN)NC(=O)[C@@H](N)C(C)C)C(=O)N[C@H](C(=O)N[C@@H](CN)C(=O)N[C@H](C(=O)N[C@@H](CN)C(=O)N[C@H](C(=O)N[C@@H](Cc1c[nH]c2ccccc12)C(=O)N[C@@H](CN)C(=O)N[C@@H](CN)C(N)=O)[C@@H](C)CC)C(C)C)C(C)C,1.7077439286435236,1.7233084
+579,Escherichia coli,False,O=C(O)C1CSc2c(-c3cccc(C(F)(F)F)c3)c(Cc3cccc(OCc4ccc(F)cc4)c3)cc(=O)n21,2.5228787452803374,1.9366407
+5047,Staphylococcus aureus,False,CC[C@H](C)C(NC(=O)[C@H](CC(C)C)NC(=O)[C@H](CCCN=C(N)N)NC(=O)[C@@H](N)C(C)C)C(=O)N[C@H](C(=O)N[C@@H](C)C(=O)N[C@H](C(=O)N[C@@H](CCCNC(=N)N)C(=O)N[C@H](C(=O)N[C@@H](Cc1c[nH]c2ccccc12)C(=O)N[C@@H](CCCNC(=N)N)C(=O)N[C@@H](CCCNC(=N)N)C(N)=O)[C@@H](C)CC)C(C)C)C(C)C,2.397940008672037,1.7233768
+352,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCCCC[n+]1c(-c2ccc(-c3ccc([N+](=O)[O-])cc3)cc2)cn2cccnc21,2.8239087409443187,1.8466476
+2050,Staphylococcus aureus,False,CCCCCCCN1C(=N)N(CCCC[C@H]2CN=C(N)N2CCc2cccc(C(F)(F)F)c2)C[C@@H]1CC1CCCCC1,2.356547323513813,2.0728137
+2093,Staphylococcus aureus,False,COc1cc(C2Oc3cc(C4Oc5cc(O)cc(O)c5C(=O)C4O)ccc3OC2CO)ccc1O,0.8772642350095605,1.1649799
+678,Salmonella enterica subsp. enterica serovar Typhimurium,False,COc1cccc(CN2c3nccc[n+]3C[C@@]2(O)c2ccc([N+](=O)[O-])cc2)c1,0.9083330424043154,0.78008467
+1929,Staphylococcus aureus,False,O=C(O)COCC(=O)Nc1ccc(-c2nc3cc(F)ccc3[nH]2)cc1,1.7068585165490688,1.2606997
+782,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCN1c2nccc[n+]2C[C@@]1(O)c1ccc(Br)cc1,1.0452752090209367,1.7730399
+3950,Staphylococcus aureus,False,CCCc1ccc(-c2[nH]c(=N)[nH]c2CCCCCc2cn(C/C(C)=C/c3ccccc3)nn2)cc1,2.847711655616944,2.4652402
+3221,Salmonella enterica subsp. enterica serovar Typhimurium,False,Cc1ccc(NC(=O)Cn2c(-c3ccccc3Br)c(CC3CC3)[nH]c2=N)cc1,1.671620396561262,0.64551866
+5322,Salmonella enterica subsp. enterica serovar Typhimurium,False,O=C1C=C(Br)/C(=C/Br)O1,2.0,1.909039
+293,Salmonella enterica subsp. enterica serovar Typhimurium,False,Cn1c(-c2ccc([N+](=O)[O-])cc2)c[nH]c1=N,0.7910214827237461,-0.07166101
+4996,Mycolicibacterium smegmatis,False,CCCS(=O)(=O)Nc1ccc2[nH]c(=N)ncc2c1,1.4436974992327123,1.3764596
+886,Staphylococcus aureus,False,Oc1cc(O)c2c(c1)O[C@@]1(c3ccc(O)c(O)c3)Oc3cc(O)c4c(c3[C@@H]2[C@H]1O)O[C@H](c1ccc(O)c(O)c1)[C@H](O)C4,2.161150909262745,1.6618057
+166,Salmonella enterica subsp. enterica serovar Typhimurium,False,C=C1OC(=O)C(CCCCCC)=C1Br,1.7117507744280136,1.2112136
+3529,Staphylococcus aureus,False,N=c1[nH]cc(-c2ccc(F)cc2)n1CCCCCn1c(-c2ccc(F)cc2)c[nH]c1=N,1.2168113089247423,1.7791517
+3496,Escherichia coli,False,c1ccc(-c2c[nH]c(=NCCCCCCN=c3[nH]cc(-c4ccccc4)[nH]3)[nH]2)cc1,2.6989700043360187,1.9474523
+4967,Mycolicibacterium smegmatis,False,CCCCCCCCCn1c(=N)[nH]c2cc(NC(=O)c3ccc(CCCCC)cc3)ccc21,1.6345120151091006,1.6542273
+3226,Salmonella enterica subsp. enterica serovar Typhimurium,False,COc1ccc(Cc2[nH]c(=N)n(CC(=O)Nc3ccc(C)cc3)c2-c2ccccc2Br)cc1,2.2006594505464183,1.8581079
+2087,Staphylococcus aureus,False,COc1cc(C2Oc3cc(-c4cc(=O)c5c(O)cc(O)cc5o4)ccc3OC2CO)ccc1O,2.0648565335638382,1.4158319
+6272,Staphylococcus aureus,False,CCCc1ccc(/C=C(/C)Cn2cc(CCCCCc3[nH]c(=N)[nH]c3-c3ccccc3)nn2)cc1,2.847711655616944,2.53191
+3164,Pseudoalteromonas ulvae,False,COc1ccc(CCNC(=O)c2cn(-c3ccc(OC)cc3)nn2)cc1,1.94692155651658,1.9865503
+793,Salmonella enterica subsp. enterica serovar Typhimurium,False,CC(C)N1c2nccc[n+]2C[C@@]1(O)c1ccc([N+](=O)[O-])cc1,0.3311483519174816,0.03645128
+5990,Bacillus subtilis,False,COc1ccc(-n2cc(COc3ccc(/C=N/N=c4[nH]c(-c5cc6cc(Br)cc(OC)c6oc5=O)cs4)cc3)nn2)cc1,1.7986028756795482,1.5502251
+3331,Staphylococcus aureus,False,Cn1cc(-c2cc[nH]c(=N)n2)c2ccc(Br)cc21,1.2247537402597637,1.498316
+114,Streptococcus mutans,False,CC(C)=CCCC(C)(C=Cc1ccc(O)cc1)C=Cc1ccc(O)cc1,2.542185335533381,1.6537237
+3530,Staphylococcus aureus,False,N=c1[nH]cc(-c2ccc(F)cc2)n1CCCCn1c(-c2ccc(F)cc2)c[nH]c1=N,1.6126101736612704,1.8263644
+712,Salmonella enterica subsp. enterica serovar Typhimurium,False,O[C@@]1(c2ccc(Cl)cc2)C[n+]2cccnc2N1C1CC1,1.082494490447453,0.85482424
+6206,Mycolicibacterium smegmatis,False,N=c1nc(-c2c[nH]c3ccc(Cl)cc23)cc[nH]1,1.7375489102695705,1.7579157
+2031,Bacillus subtilis,False,O=c1cc(CO)oc(C2C=C(c3cccs3)Oc3ccccc32)c1O,1.886715048623525,1.6913668
+914,Escherichia coli,False,O=C(O)c1c(-c2cn(Cc3ccccc3)nn2)sc2c(-c3cccc(C(F)(F)F)c3)c(Cc3cccc4ccccc34)cc(=O)n12,1.3010299956639813,1.8721275
+719,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCCCCN1c2nccc[n+]2C[C@@]1(O)c1ccc(S(C)(=O)=O)cc1,1.2196826878598488,1.2164305
+5795,Staphylococcus aureus,False,N=c1nc(-c2ccco2)cc(-c2nc(=O)c3ccccc3[nH]2)[nH]1,1.244887733604929,1.3770101
+160,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCC1=C(Br)C(=C(Br)Br)OC1=O,1.2406343783440716,1.8635509
+3482,Escherichia coli,False,N=c1[nH]cc(-c2ccc(Cl)cc2)n1CCCCCCCn1c(-c2ccc(Cl)cc2)c[nH]c1=N,2.214670164989233,2.1821826
+2753,Bacillus subtilis,False,CCCCCCC(C/C=C\CCCCCCCC(=O)OC)NC(=O)CN,2.1041125580490725,2.1366842
+883,Staphylococcus aureus,False,COc1ccc2c(c[n+](C)c3c4cc5c(cc4ccc23)OCO5)c1OC,1.818156412055228,1.7047213
+8821,Staphylococcus aureus,False,COCCn1cc(-c2nc(-c3c[nH]c4ncccc34)cs2)c2cc(Br)ccc21,2.769551078621726,1.990907
+3705,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCc1ccc(C(=O)Nc2ccc3c(c2)[nH]c(=N)n3C)cc1,1.6989700043360187,1.8488655
+596,Salmonella enterica subsp. enterica serovar Typhimurium,False,O=[N+]([O-])c1ccc(-c2c[nH]c(=NC3CCCC3)[nH]2)cc1,1.928117992693875,0.84538805
+301,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCCCCn1c(-c2ccc([N+](=O)[O-])cc2)c[nH]c1=N,1.4509967379742124,1.407712
+5367,Bacillus subtilis,False,O=C(c1cn(-c2ccc(Br)cc2)nn1)c1c(-c2ccc(Cl)cc2)nc2sccn12,1.555198383648797,1.5592604
+946,Escherichia coli,False,COC(=O)c1cccc(-c2ccc(O[C@H]3O[C@H](CO)[C@@H](O)[C@H](O)[C@@H]3O)c(C)c2)c1,3.4814860601221125,3.3216946
+1685,Staphylococcus aureus,False,CCCCCc1ccc(C(=O)Nc2ccc3c(c2)[nH]c(=N)n3Cc2ccccc2)cc1,2.283996656365201,2.1116655
+9339,Staphylococcus aureus,False,COc1cccc2nn3cc(C4=Nc5ccc6ccccc6c5C4(C)C)cnc3c12,0.5937976127010307,1.5245538
+3717,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCc1ccc(C(=O)Nc2ccc3c(c2)[nH]c(=N)n3CCCCc2ccccc2)cc1,2.0181813928293364,2.1037765
+335,Salmonella enterica subsp. enterica serovar Typhimurium,False,COc1ccc(Cn2c(-c3ccccc3)c[nH]c2=N)cc1OC,0.8074325466634544,1.3922726
+3707,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCc1ccc(C(=O)Nc2ccc3[nH]c(=N)[nH]c3c2)cc1,1.6989700043360187,1.765814
+5651,Escherichia coli,False,Cn1cc2c(n1)C(C)(C)[C@@H]1CC[C@]3(C)[C@H](CC=C4[C@@H]5CC(C)(C)CC[C@]5(C(=O)O)CC[C@]43C)[C@@]1(C)C2,1.789534883218337,2.0583262
+6225,Mycolicibacterium smegmatis,False,N=c1[nH]cc(-c2c[nH]c3ccc(Br)cc23)[nH]1,2.0222763947111524,1.73224
+1709,Staphylococcus aureus,False,CCCCCc1ccc(C(=O)Nc2ccc3c(c2)[nH]c(=N)n3Cc2ccc(OC)cc2)cc1,1.939302159646388,2.0645332
+3210,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCCCc1[nH]c(=N)n(CC(=O)Nc2ccccc2)c1-c1ccccc1Br,0.9400581119380452,1.3952049
+3495,Escherichia coli,False,c1ccc(-c2c[nH]c(=NCCCCCCCN=c3[nH]cc(-c4ccccc4)[nH]3)[nH]2)cc1,1.928117992693875,1.5818832
+3504,Escherichia coli,False,Fc1ccc(-c2c[nH]c(=NCCCCN=c3[nH]cc(-c4ccc(F)cc4)[nH]3)[nH]2)cc1,2.1870866433571443,1.9052954
+884,Staphylococcus aureus,False,C[n+]1cc2c3c(ccc2c2ccc4cc5c(cc4c21)OCO5)OCO3,1.6108339156354674,1.2917385
+3560,Staphylococcus aureus,False,Clc1ccc(-c2c[nH]c(=NCCCCCCN=c3[nH]cc(-c4ccc(Cl)cc4)[nH]3)[nH]2)cc1,0.8239087409443187,1.1786683
+718,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCCCCN1c2nccc[n+]2C[C@@]1(O)c1ccc(-c2ccc(-c3ccccc3)cc2)cc1,1.277366077466188,1.3984661
+170,Salmonella enterica subsp. enterica serovar Typhimurium,False,CC(Br)C1=CC(=C(Br)Br)OC1=O,2.9333014495770047,1.6970174
+1043,Staphylococcus aureus,False,CCCCCc1ccc(C(=O)NCCn2cc(CCCCCc3cn(CCc4ccccc4)c(=N)[nH]3)nn2)cc1,2.00436480540245,2.1258442
+173,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCC(Br)C1=CC(=C(Br)Br)OC1=O,2.882728704344236,1.7348428
+3469,Escherichia coli,False,N=c1[nH]cc(-c2ccccc2)n1CCCCCCn1c(-c2ccccc2)c[nH]c1=N,2.537602002101044,2.002162
+5785,Staphylococcus aureus,False,N=c1nc(-c2ccccc2Cl)cc(-c2nc(=O)c3ccccc3[nH]2)[nH]1,1.250263684430939,1.4893385
+5005,Mycolicibacterium smegmatis,False,CCCCCc1ccc(C(=O)Nc2ccc3[nH]c(=N)ncc3c2)cc1,1.4089353929735005,1.5722291
+5783,Staphylococcus aureus,False,N=c1nc(-c2ccc(C(F)(F)F)cc2)cc(-c2nc(=O)c3ccccc3[nH]2)[nH]1,1.062983892535185,1.5628147
+3245,Staphylococcus aureus,False,CCCCCc1[nH]c(=N)n(CC(=O)Nc2ccc(C)cc2)c1-c1ccccc1Br,1.5257837359237447,1.4888601
+164,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCCC1=CC(=C(Br)Br)OC1=O,0.7956086680807006,1.3211114
+3403,Salmonella enterica subsp. enterica serovar Typhimurium,False,Fc1ccc(-c2c[nH]c(=NCCCCCN=c3[nH]cc(-c4ccc(F)cc4)[nH]3)[nH]2)cc1,2.1191864077192086,1.7637963
+6080,Streptococcus mutans,False,NCc1ccccc1NC(=O)c1cc2ccccc2s1,0.776763726897002,1.1320926
+6516,Staphylococcus aureus,False,COc1ccc2c(c1)c(C(=O)c1nc(-c3cn(C)c4ccc(Br)cc34)no1)cn2C,1.3872161432802643,1.6644707
+8151,Salmonella enterica subsp. enterica serovar Typhimurium,False,CN(Cc1ccsc1)CC1CCN(CCc2ccccc2Br)CC1,0.5114492834995561,1.1836071
+6066,Streptococcus mutans,False,COC(=O)c1cccc(NC(=O)c2cnc3ccccc3c2)c1,0.8317972531573687,1.8384302
+806,Salmonella enterica subsp. enterica serovar Typhimurium,False,CC(C)CN1c2nccc[n+]2C[C@@]1(O)c1ccc(Cl)cc1,1.5030703519267847,1.388542
+318,Salmonella enterica subsp. enterica serovar Typhimurium,False,N=c1[nH]cc(-c2ccc(Cl)cc2)n1C1CCC1,1.9355420107730816,1.1575129
+1967,Bacillus subtilis,False,CCCCCCC(C/C=C\CCCCCCCC(=O)OC)N=Cc1cc(OC)c(O)c(OC)c1,2.065501548756432,1.9434595
+302,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCCCCn1c(-c2ccc(S(C)(=O)=O)cc2)c[nH]c1=N,1.536107011014093,1.4394844
+1670,Staphylococcus aureus,False,O=C(Cn1cc(Cc2csc3ccccc23)nn1)Nc1ccccc1,0.667763584508557,0.61600006
+7504,Staphylococcus aureus,False,COCCn1cc(-c2nc(-c3cn(C)c4ccccc34)cs2)c2cc(F)ccc21,3.397940008672037,2.979493
+163,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCCC1=C(Br)/C(=C/Br)OC1=O,1.9689957186364628,1.8288815
+4173,Pseudoalteromonas ulvae,False,COc1ccc(CCn2cc(COCc3cn(CCc4ccc(OC)c(Br)c4)nn3)nn2)cc1Br,0.7964232250220276,0.5446436
+4816,Streptococcus mutans,False,CCCCCCCCCCCCCCCc1c[nH]c(=N)[nH]1,3.026872146400301,2.1980598
+5652,Escherichia coli,False,CC1(C)CC[C@]2(C(=O)O)CC[C@]3(C)C(=CC[C@@H]4[C@@]5(C)Cc6c([nH][nH]c6=N)C(C)(C)[C@@H]5CC[C@]43C)[C@@H]2C1,2.091434802959319,1.8177981
+3396,Salmonella enterica subsp. enterica serovar Typhimurium,False,c1ccc(-c2c[nH]c(=NCCCCCCN=c3[nH]cc(-c4ccccc4)[nH]3)[nH]2)cc1,1.8477116556169435,1.627596
+1923,Staphylococcus aureus,False,O=C(O)CCC(=O)Nc1ccc(-c2nc3cccnc3[nH]2)cc1,1.5312097379003893,1.1174535
+257,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCCCCn1c(-c2ccccc2)c[nH]c1=N,1.924453038607469,2.1980693
+5962,Raoultella planticola,False,COc1ccc(-n2cc(COc3ccc(/C=N/N=c4[nH]c(-c5cc6cccc(Br)c6oc5=O)cs4)cc3)nn2)cc1,1.3736596326249575,1.5110637
+254,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCn1c(-c2ccccc2)c[nH]c1=N,1.3151546383555877,1.2854435
+3481,Escherichia coli,False,N=c1[nH]cc(-c2ccc(Cl)cc2)n1CCCCCCCCn1c(-c2ccc(Cl)cc2)c[nH]c1=N,2.958607314841775,2.2437623
+2699,Streptococcus mutans,False,O=C(/C=C/c1cccc(O)c1)c1ccccc1O,1.1938200260161125,1.376567
+2702,Streptococcus mutans,False,COc1cc(C(=O)C=Cc2ccccc2O)ccc1O,1.4685210829577446,1.2204592
+1771,Streptococcus mutans,False,CC(C)(C)C(=O)On1cc(-c2ccc(NC(=O)c3cc4cc(F)ccc4[nH]3)cc2)[nH]c1=N,0.9208187539523748,1.6385963
+3507,Escherichia coli,False,Clc1ccc(-c2c[nH]c(=NCCCCCCCN=c3[nH]cc(-c4ccc(Cl)cc4)[nH]3)[nH]2)cc1,1.4559319556497243,1.6594455
+267,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCn1c(-c2ccc(Cl)cc2)c[nH]c1=N,2.096910013008056,1.7816615
+4179,Pseudoalteromonas ulvae,False,CN(C)CCOc1ccc(CCn2cc(COCc3cn(CCc4ccc(OCCN(C)C)c(Br)c4)nn3)nn2)cc1Br,1.0371573187987575,0.5657372
+2442,Staphylococcus aureus,False,CCCCCCCCN(CCCCCCCC)CCCCCCCCCCC(=O)OC,1.4818566097760488,1.8873827
+717,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCCCCN1c2nccc[n+]2C[C@@]1(O)c1ccc(Br)cc1,2.1487416512809245,2.0614424
+2035,Escherichia coli,False,COc1ccc(C2=CC(c3oc(CO)cc(=O)c3O)c3ccccc3O2)cc1,1.7925983378585526,1.2249002
+7716,Escherichia coli,False,Cc1cc(-c2ccc3ccn(CC(=O)Nc4cccnc4)c(=O)c3c2)ccc1O[C@H]1O[C@H](CO)[C@@H](O)[C@H](O)[C@@H]1O,4.7447274948966935,3.0066195
+5391,Escherichia coli,False,O=C(c1cn(-c2ccc(Br)cc2)nn1)c1c(-c2ccc(Cl)cc2)nc2sccn12,1.4760171376011728,1.539643
+3388,Salmonella enterica subsp. enterica serovar Typhimurium,False,N=c1[nH]cc(-c2ccc(Br)cc2)n1CCCCCCCCn1c(-c2ccc(Br)cc2)c[nH]c1=N,2.113509274827518,2.4142466
+6059,Streptococcus mutans,False,NC(=O)c1ccc(NC(=O)c2ccc3ccccc3n2)cc1,1.2644011003018196,1.1876496
+4989,Mycolicibacterium smegmatis,False,CCCCC(=O)Nc1ccc2[nH]c(=N)ncc2c1,1.5850266520291818,1.5245394
+3477,Escherichia coli,False,N=c1[nH]cc(-c2ccc(F)cc2)n1CCCCCn1c(-c2ccc(F)cc2)c[nH]c1=N,2.1249387366083,2.2056098
+3558,Staphylococcus aureus,False,Clc1ccc(-c2c[nH]c(=NCCCCCCCCN=c3[nH]cc(-c4ccc(Cl)cc4)[nH]3)[nH]2)cc1,0.5228787452803374,1.142684
+786,Salmonella enterica subsp. enterica serovar Typhimurium,False,CN1c2nccc[n+]2C[C@@]1(O)c1ccc(F)cc1,-0.2612628687924934,0.39617145
+3726,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCc1ccc(C(=O)Nc2ccc3c(c2)[nH]c(=N)n3CCCc2ccccc2)cc1,1.6989700043360187,2.0989041
+5637,Escherichia coli,False,CC1(C)CC[C@]2(C(=O)O)CC[C@]3(C)C(=CC[C@@H]4[C@@]5(C)CC(C6=NCCO6)[C@H](O)C(C)(C)[C@@H]5CC[C@]43C)[C@@H]2C1,1.8177091190543304,1.885099
+5004,Mycolicibacterium smegmatis,False,CCCCc1ccc(C(=O)Nc2ccc3[nH]c(=N)ncc3c2)cc1,1.4089353929735005,1.5458864
+241,Salmonella enterica subsp. enterica serovar Typhimurium,False,N#Cc1ccc(-c2c[nH]c(=N)[nH]2)cc1,0.4997635251743606,1.6441547
+573,Escherichia coli,False,O=C(O)C1CSc2c(-c3cccc(C(F)(F)F)c3)c(COc3ccccc3)cc(=O)n21,1.6777807052660805,1.6662009
+649,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCN=c1[nH]cc(-c2ccc(Br)cc2)[nH]1,2.508638306165728,2.0060353
+1911,Staphylococcus aureus,False,O=C(O)CCCCC(=O)Nc1ccc(-c2nc3cc(Cl)ccc3[nH]2)cc1,1.4067139329795424,1.5713671
+910,Escherichia coli,False,Cn1cc(-c2sc3c(C4CC4)c(Cc4cccc5ccccc45)cc(=O)n3c2C(=O)O)nn1,0.8239087409443187,1.3743002
+6030,Streptococcus mutans,False,COC(=O)c1cccc(NC(=O)c2ccc(-c3ccccc3)cc2)c1,0.9783972839717574,0.7662867
+6217,Mycolicibacterium smegmatis,False,CC(C)Cn1cc(-c2cc[nH]c(=N)n2)c2cc(Br)ccc21,1.826813731587726,1.6229708
+6015,Staphylococcus aureus,False,COc1ccc(-n2cc(COc3ccc(/C=N/N=c4[nH]c(-c5cc6cccc(OC)c6oc5=O)cs4)cc3)nn2)cc1,1.8696662315049928,1.5440623
+6096,Streptococcus mutans,False,NC(=O)c1cccc(NC(=O)c2cc3cc([N+](=O)[O-])ccc3o2)c1,1.4111682744057925,1.247691
+3531,Staphylococcus aureus,False,N=c1[nH]cc(-c2ccc(F)cc2)n1CCCn1c(-c2ccc(F)cc2)c[nH]c1=N,0.7677664788852665,1.8348505
+6058,Streptococcus mutans,False,COC(=O)c1ccccc1NC(=O)c1ccc2ccccc2n1,1.048176964684088,0.89581347
+3503,Escherichia coli,False,Fc1ccc(-c2c[nH]c(=NCCCCCN=c3[nH]cc(-c4ccc(F)cc4)[nH]3)[nH]2)cc1,2.154901959985743,1.915816
+239,Salmonella enterica subsp. enterica serovar Typhimurium,False,Cc1ccc(-c2c[nH]c(=N)[nH]2)cc1,1.1095789811990855,1.0375825
+4978,Mycolicibacterium smegmatis,False,CCCCCc1ccc(C(=O)Nc2ccc3c(c2)[nH]c(=N)n3CCCc2ccc(Cl)cc2)cc1,2.193820026016113,2.0949311
+3533,Staphylococcus aureus,False,N=c1[nH]cc(-c2ccc(Cl)cc2)n1CCCCCCCCn1c(-c2ccc(Cl)cc2)c[nH]c1=N,2.214670164989233,2.2631547
+258,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCCCCCn1c(-c2ccccc2)c[nH]c1=N,2.221848749616356,2.235706
+2235,Pseudoalteromonas ulvae,False,O=C(NCCc1cc(Br)c(O)c(Br)c1)c1cn(CCc2ccc(O)c(Br)c2)nn1,2.055517327849832,1.299206
+3163,Pseudoalteromonas ulvae,False,COc1ccc(-n2cc(C(=O)NCCc3cccc(OC)c3)nn2)cc1,1.2814983111327258,1.1954067
+2290,Bacillus subtilis,False,CCCCCCCCC(CCCCCCCCC(=O)OC)SCC(=O)NC(C(=O)OC)c1c[nH]cn1,2.721246399047171,1.9666266
+7331,Staphylococcus aureus,False,CC(C)CNC(=O)c1c(-c2ccc(C(C#N)Cc3ccc(O)cc3)cc2)oc2ccccc12,1.8446639625349384,1.7770321
+640,Salmonella enterica subsp. enterica serovar Typhimurium,False,CN=c1[nH]cc(-c2ccc(O)cc2)[nH]1,0.7950664776458547,0.89552325
+1901,Staphylococcus aureus,False,O=C(O)CCCCC(=O)Nc1ccc(-c2nc3ccccc3[nH]2)cc1,1.0888423912600231,1.4485255
+3243,Staphylococcus aureus,False,COc1ccc(Cc2[nH]c(=N)n(CC(=O)Nc3ccccc3)c2-c2ccccc2Br)cc1,2.3665315444204134,1.7124145
+6517,Staphylococcus aureus,False,Cn1cc(C(=O)c2nc(-c3cn(C)c4ccc(F)cc34)no2)c2ccccc21,1.517126416391246,1.9992081
+7508,Staphylococcus aureus,False,C=CC(C)(C)c1[nH]c2cc(Br)ccc2c1CCNC,1.154901959985743,1.0260166
+5839,Staphylococcus aureus,False,N=c1nc(-c2cccc(NC(=O)c3cc(Cl)cc(Br)c3)c2)cc[nH]1,1.5590909179347818,1.6070619
+905,Escherichia coli,False,Cc1ccc(Cn2cc(-c3c(Cc4cccc5ccccc45)cc(=O)n4c3SCC4C(=O)O)nn2)cc1,1.1249387366083,1.0775093
+795,Salmonella enterica subsp. enterica serovar Typhimurium,False,CN1c2nccc[n+]2C[C@@]1(O)c1ccc([N+](=O)[O-])cc1,0.1559579579589831,0.23554887
+273,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCCCCCCCn1c(-c2ccc(Cl)cc2)c[nH]c1=N,2.3872161432802645,1.7050842
+6520,Staphylococcus aureus,False,COc1ccc2c(c1)c(C(=O)c1nc(-c3cn(C)c4ccc(F)cc34)no1)cn2C,1.4023048140744878,1.8997166
+6523,Staphylococcus aureus,False,COc1ccc2c(c1)c(C(=O)c1nc(-c3cn(C)c4ccc(OC)cc34)no1)cn2C,2.657577319177794,1.5600717
+2452,Bacillus subtilis,False,CCCCCCCCCCCC[N+](C)(C)CCCCCCCCCCC(=O)OC,1.7220296704681497,1.8153669
+272,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCCCCCCn1c(-c2ccc(Cl)cc2)c[nH]c1=N,2.3872161432802645,1.9292772
+3550,Staphylococcus aureus,False,c1ccc(-c2c[nH]c(=NCCCCN=c3[nH]cc(-c4ccccc4)[nH]3)[nH]2)cc1,1.543633966870957,1.1552721
+2931,Staphylococcus aureus,False,CCCCOc1cc(Br)cc(/C=C(\C)Cn2cc(CCCCCc3c[nH]c(=N)[nH]3)nn2)c1F,2.3467874862246565,2.382955
+313,Salmonella enterica subsp. enterica serovar Typhimurium,False,N=c1[nH]cc(-c2ccccc2)n1C1CCCCC1,1.0695604052332994,1.2573347
+3411,Salmonella enterica subsp. enterica serovar Typhimurium,False,Clc1ccc(-c2c[nH]c(=NCCCN=c3[nH]cc(-c4ccc(Cl)cc4)[nH]3)[nH]2)cc1,2.5686362358410126,1.8715574
+336,Salmonella enterica subsp. enterica serovar Typhimurium,False,COc1ccc(CCn2c(-c3ccccc3)c[nH]c2=N)cc1OC,0.7328282715969863,1.3025087
+3248,Staphylococcus aureus,False,Cc1ccc(NC(=O)Cn2c(-c3ccccc3Br)c(CC3CC3)[nH]c2=N)cc1,1.6595558851598815,0.9269399
+821,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCCCCCCCCCCN1c2nccc[n+]2C[C@@]1(O)c1ccccc1,0.7456936676687143,1.0779868
+2842,Bacillus subtilis,False,Cc1ccc(-c2nn(-c3ccccc3)cc2C2c3c(n(C)c(=O)n(C)c3=O)N=CN2c2ccc(C)cc2)cc1,2.156856104441868,2.0242558
+278,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCn1c(-c2ccc(-c3ccccc3)cc2)c[nH]c1=N,1.675717544702307,1.7456214
+6513,Staphylococcus aureus,False,Cn1cc(C(=O)c2nc(-c3cn(C)c4ccccc34)no2)c2cc(Br)ccc21,1.4034029043735394,1.5820675
+703,Salmonella enterica subsp. enterica serovar Typhimurium,False,O=[N+]([O-])c1ccc([C@]2(O)C[n+]3cccnc3N2C23CC4CC(CC(C4)C2)C3)cc1,2.055517327849832,1.5732032
+3941,Staphylococcus aureus,False,O=C(Oc1c(Br)cc(Br)c2nc3ccccc3nc12)c1ccco1,2.853871964321762,1.9800146
+322,Salmonella enterica subsp. enterica serovar Typhimurium,False,N=c1[nH]cc(-c2ccc(Cl)cc2)n1C1CCCCCCCCCCC1,0.9200955323332796,1.7004371
+5403,Raoultella planticola,False,O=C(c1cn(-c2ccc(Br)cc2)nn1)c1c(-c2ccc(Cl)cc2)nc2sccn12,1.3737782910880494,1.5281267
+673,Salmonella enterica subsp. enterica serovar Typhimurium,False,O[C@@]1(c2ccc3c(c2)OCO3)C[n+]2cccnc2N1Cc1ccc2c(c1)OCO2,1.270025714300444,1.7917396
+3701,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCCn1c(=N)[nH]c2ccc(NC(=O)c3ccc(CCCCC)cc3)cc21,2.0,2.1108186
+804,Salmonella enterica subsp. enterica serovar Typhimurium,False,CCCCCCN1c2nccc[n+]2C[C@@]1(O)c1ccc(Cl)cc1,1.863279432843593,1.7466199
+6052,Streptococcus mutans,False,NC(=O)c1ccccc1NC(=O)c1ccc2ccccc2c1,1.0752040042020878,0.87482953
+1914,Staphylococcus aureus,False,O=C(O)CCCC(=O)Nc1ccc(-c2nc3cc([N+](=O)[O-])ccc3[nH]2)cc1,1.2054422487452383,1.238168
+716,Salmonella enterica subsp. enterica serovar Typhimurium,False,O[C@@]1(c2ccccc2)C[n+]2cccnc2N1C1CCC1,0.3071530807227702,0.4391334

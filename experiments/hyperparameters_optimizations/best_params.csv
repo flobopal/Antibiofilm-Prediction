@@ -1,0 +1,15 @@
+,log2_embed_size,num_layers,log2_layer_0,activation_1,log2_layer_1,activation_2,final_activation,log2_num_heads,pooling,dropout,lr,epochs,scheduler,schel_t_max_mod,shchel_eta_min,log2_layer_2,activation_3,schel_gamma,schel_step_size,log2_layer_3,activation_4
+model 01 Model Train,4,2,5,tanh,9,tanh,leaky_relu,2,max,0.031146410242039235,9.27006523505761e-05,8,cosine,0,0.0001,,,,,,
+model 02 Ablation no MD,4,3,4,relu,5,leaky_relu,leaky_relu,2,max,0.02320386147281396,0.00041439005104937176,9,exponential,,,10,leaky_relu,0.8871684491538897,,,
+model 03 Ablation no Molformer,4,3,3,gelu,6,leaky_relu,leaky_relu,3,max,0.07458713033620601,0.00014014201944821767,7,cosine,2,1e-06,3,tanh,,,,
+model 04 Ablation no Cross Attention,,2,6,gelu,10,gelu,identity,,,0.14986354208858305,0.0016861884808379295,7,none,,,,,,,,
+model 05 Ablation no context,,2,12,elu,12,relu,relu,,,0.04336765327473698,0.0002085592898996144,8,exponential,,,,,0.8551607893504968,,,
+model 06 Ablation no context higher dimension limit,,2,6,identity,6,sigmoid,elu,,,0.08325249055511373,0.0017709170895425068,7,step,,,,,0.635001587665233,20,,
+model 07 Model by specie Staphylococcus aureus,,4,3,gelu,9,elu,sigmoid,,,0.09747453692052664,0.00012307112538948895,6,none,,,7,gelu,,,12,relu
+model 08 Model by specie Salmonella enterica subsp. enterica serovar Typhimurium,,3,3,identity,5,tanh,tanh,,,0.10338600400154985,0.004730694707483823,7,step,,,6,elu,0.14866726081713158,20,,
+model 09 Model by specie Escherichia coli,,4,5,leaky_relu,11,tanh,elu,,,0.0406053757715946,0.0032981049429870344,7,cosine,0,0.001,4,tanh,,,2,leaky_relu
+model 10 Model by specie Mycolicibacterium smegmatis,,1,7,relu,,,elu,,,0.03997256832612116,0.0004928200786883617,8,none,,,,,,,,
+model 11 Model by specie Pseudoalteromonas ulvae,,4,9,sigmoid,11,elu,leaky_relu,,,0.1488726722203082,0.009374256191654709,9,cosine,0,0.0,10,elu,,,6,identity
+model 12 Model by specie Streptococcus mutans,,1,2,leaky_relu,,,elu,,,0.05062904932565955,0.00033824181720131744,10,none,,,,,,,,
+model 13 Model by specie Raoultella planticola,,2,7,leaky_relu,11,identity,sigmoid,,,0.12241031614540764,0.0042193136382645095,9,none,,,,,,,,
+model 14 Model by specie Bacillus subtilis,,1,4,relu,,,gelu,,,0.08088118687207752,0.0017144799130704433,10,none,,,,,,,,

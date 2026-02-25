@@ -61,7 +61,6 @@ def data_load(
         )
     """
     data = pd.read_csv(data_path)
-
     if train_test_column is not None:
         data = train_test_split(data, train_test_column, train_test_value)
 
@@ -125,7 +124,7 @@ def normalize(
         data: np.ndarray,
         normalizer_path: str,
         normalizer_start: int = None,
-        normalizer_end: int = 0) -> np.ndarray:
+        normalizer_end: int = None) -> np.ndarray:
     """
     Normalizes the input data using a StandardScaler. If a normalizer exists at the specified path,
     it loads and applies it; otherwise, it fits a new scaler, saves it, and applies it.

@@ -96,7 +96,7 @@ class Objective:
         activations = []
         for layer_index in range(num_layers):
             hidden_dims.append(
-                2**trial.suggest_int(f"log2_layer_{layer_index}", 2, 7)
+                2**trial.suggest_int(f"log2_layer_{layer_index}", 2, 10)
             )
             activations.append(
                 trial.suggest_categorical(
@@ -105,7 +105,7 @@ class Objective:
                 )
             )
         activations.append(trial.suggest_categorical("final_activation", list_names()))
-        num_heads = 2**trial.suggest_int("log2_num_heads", 0, 4)
+        num_heads = 2**trial.suggest_int("log2_num_heads", 0, 3)
         pooling = trial.suggest_categorical("pooling", ['mean', 'max', 'linear'])
         dropout = trial.suggest_float('dropout', 0, 0.15)
         lr = trial.suggest_float('lr', 1e-5, 1e-2, log=True)

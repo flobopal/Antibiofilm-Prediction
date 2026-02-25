@@ -1,0 +1,139 @@
+{
+    "Staphylococcus aureus":
+    {
+        "model_params":
+        {
+            "layer_dims":[256, 512, 128, 4096],
+            "activations":["gelu", "elu", "gelu", "relu", "sigmoid"],
+            "dropout":0.0975
+        },
+        "lr":0.000123,
+        "trainer_params":
+        {
+            "num_epochs":64,
+            "scheduler_name":"none",
+            "scheduler_kwargs":{}
+        }
+    },
+
+    "Salmonella enterica subsp. enterica serovar Typhimurium":
+    {
+        "model_params":
+        {
+            "layer_dims":[8, 32, 64],
+            "activations":["identity", "tanh", "elu", "tanh"],
+            "dropout":0.1034
+        },
+        "lr":0.00473,
+        "trainer_params":
+        {
+            "num_epochs":128,
+            "scheduler_name":"step",
+            "scheduler_kwargs":{"step_size":20, "gamma":0.1487}
+        }
+    },
+
+    "Escherichia coli":
+    {
+        "model_params":
+        {
+            "layer_dims":[32, 2048, 16, 4],
+            "activations":["leaky_relu", "tanh", "tanh", "leaky_relu", "elu"],
+            "dropout":0.0406
+        },
+        "lr": 0.00330,
+        "trainer_params":
+        {
+            "num_epochs":128,
+            "scheduler_name":"cosine",
+            "scheduler_kwargs":{"T_max":128, "eta_min":0.001}
+        }
+    },
+
+    "Mycolicibacterium smegmatis":
+    {
+        "model_params":
+        {
+            "layer_dims":[128],
+            "activations":["relu", "elu"],
+            "dropout":0.0400
+        },
+        "lr":0.000493,
+        "trainer_params":
+        {
+            "num_epochs":256,
+            "scheduler_name":"none",
+            "scheduler_kwargs":{}
+        }
+    },
+
+    "Pseudoalteromonas ulvae":
+    {
+        "model_params":
+        {
+            "layer_dims":[512, 2048, 1024, 64],
+            "activations":["sigmoid", "elu", "elu", "identity", "leaky_relu"],
+            "dropout":0.1489
+        },
+        "lr":0.00937,
+        "trainer_params":
+        {
+            "num_epochs":512,
+            "scheduler_name":"cosine",
+            "scheduler_kwargs":{"T_max":512, "eta_min":0}
+        }
+    },
+
+    "Streptococcus mutans":
+    {
+        "model_params":
+        {
+            "layer_dims":[4],
+            "activations":["leaky_relu", "elu"],
+            "dropout":0.0506
+        },
+        "lr":0.000338,
+        "trainer_params":
+        {
+            "num_epochs":1024,
+            "scheduler_name":"none",
+            "scheduler_kwargs":{}
+        }
+    },
+
+    "Raoultella planticola":
+    {
+        "model_params":
+        {
+            "layer_dims":[128, 2048],
+            "activations":["leaky_relu", "identity", "sigmoid"],
+            "dropout":0.1224
+        },
+        "lr":0.00422,
+        "trainer_params":
+        {
+            "num_epochs":512,
+            "scheduler_name":"none",
+            "scheduler_kwargs":{}
+        }
+    },
+
+
+    "Bacillus subtilis":
+    {
+        "model_params":
+        {
+            "layer_dims":[16],
+            "activations":["relu", "gelu"],
+            "dropout":0.0809
+        },
+        "lr":0.00171,
+        "trainer_params":
+        {
+            "num_epochs":1024,
+            "scheduler_name":"none",
+            "scheduler_kwargs":{}
+        }
+    }
+
+}
