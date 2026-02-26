@@ -2,7 +2,7 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 
-# AntibiofilmTransferPred
+# Antibiofilm Prediction
 
 This repository contains the code and scripts associated with the manuscript:
 
