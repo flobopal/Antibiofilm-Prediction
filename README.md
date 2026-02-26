@@ -60,9 +60,7 @@ Input data must be provided as a .csv file containing:
 
 Model checkpoints, normalization parameters, and organism encoders are stored in the `antibiofilm_checkpoint` directory.
 
-Example usage can be found in:
-
-`experiments/01 Model Train and evaluation/03 eval.py`
+See **Generating Predictions** section below
 
 
 ## General Usage
