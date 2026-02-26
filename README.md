@@ -261,5 +261,9 @@ with torch.no_grad():
 ## Citation
 If you use this code, please cite:
 ```
-(Citation details will be included when the paper is accepted)
+(Citation details will be added upon publication.)
 ```
+
+## License
+
+MIT License
