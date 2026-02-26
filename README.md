@@ -28,7 +28,7 @@ This architecture enables organism-aware predictions and supports cross-species 
 ### Clone the repository
 
 ```bash
-git clone https://github.com/flobopal/AntibiofilmTransferPred
+git clone https://github.com/flobopal/Antibiofilm-Prediction.git
 cd AntibiofilmTransferPred
 ```
 
