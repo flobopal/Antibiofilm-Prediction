@@ -11,5 +11,3 @@ def get_descriptors(input_file, smiles_column, output_file, **kwargs):
 
     output = pd.concat([df, descriptors], axis=1)
     output.to_csv(output_file)
-
-get_descriptors("data/Antibiofilm Molformer.csv", "curated_smiles", "data/Antibiofilm MF+MD.csv", index_col=0)
