@@ -81,8 +81,8 @@ Optional arguments:
 python main.py prediction "input_csv_path", "organism_column_name", "output_csv_path" \
     --features_start "index of the first features column" \
     --features_end "index of the first column that does not contains features" \
-    --normalizer_start "index of the first column that needs to be normalized" \
-    --normalizer_end "index of the first column that does not need to be normalized" \
+    --normalizer_start "index of the first feature that needs to be normalized" \
+    --normalizer_end "index of the first feature that does not need to be normalized" \
     --organism_encode_path "Path to the encoder" \
     --normalizer_path "Path to the normalizer" \
     --model_checkpoint_path "Path to the model checkpoint"

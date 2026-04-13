@@ -11,6 +11,7 @@ def parse_descriptors(args: argparse.Namespace):
     get_descriptors(args.input, args.smiles_column, args.output)
 
 def parse_data(args: argparse.Namespace):
+    data = pd.read_csv(args.input)
     return data_load(
         args.input,
         features_start= args.features_start,
@@ -110,17 +111,19 @@ predict_parser.add_argument(
 predict_parser.add_argument(
     "--normalizer_start",
     type=int,
-    default=766
+    default=768,
+    help="Index of the first feature that need to be normalized"
 )
 
 predict_parser.add_argument(
     "--normalizer_end",
     type=int,
-    default=2000
+    default=2000,
+    help="Index of the fist feature that does not need to be normalized"
 )
 
 predict_parser.add_argument(
-    "--organism_encode_path",
+    "--organism_encoder_path",
     default=Path("antibiofilm checkpoint/encoder.pkl"),
     help="path to the organism encoder"
 )
@@ -134,7 +137,7 @@ predict_parser.add_argument(
 
 predict_parser.add_argument(
     "--model_checkpoint_path",
-    default=Path("antibiofilm checkpoint/enantibiofilm_model.pth"),
+    default=Path("antibiofilm checkpoint/antibiofilm_model.pth"),
     help="path to the model checkpoint"
 )
 
