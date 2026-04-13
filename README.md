@@ -91,9 +91,9 @@ python main.py prediction "input_csv_path", "organism_column_name", "output_csv_
 
 Arguments `--features-start`, `--features-end`, `normalizer-start` and `normalizer-end` are only necessary if the input file does not follow the structure described in the **Data preparation** section. If `features-end` or `normalizer-end` are not indicated, the script will read all columns from the corresponding -start index to the end.
 
-By default, the script will load the organism encoder, the normalizer and the model checkpoint located at the `antibiofilm_checkpoint` directory. If they are located elsewhere, their paths can be indicated using `--organism_encode_path`, `normalizer_path` and `model_checkpoint_path`.
+By default, the script will load the organism encoder, the normalizer and the model checkpoint located at the `antibiofilm_checkpoint` directory. If they are located elsewhere, their paths can be indicated using `--organism_encode_path`, `--normalizer_path` and `--model_checkpoint_path`.
 
-#### Uning Python code
+#### Using Python code
 
 Example script: 
 
@@ -129,7 +129,7 @@ with torch.no_grad():
 ```
 
 
-## General usage
+## General usage of the module
 
 All scripts used in the manuscript are available in the `experiments` folder.
 
