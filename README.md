@@ -46,6 +46,12 @@ All models were trained using PyTorch 2.x with CUDA 11.x support.
 
 MolFormer requires a separate Conda enviroment. Please, follow the installation instructions at https://github.com/IBM/molformer/blob/main/environment.md to set it up.
 
+#### Molformer checkpoints
+
+Download and extract the `Pretrained MolFormer` folder from https://ibm.ent.box.com/v/MoLFormer-data/file/1099206797207
+
+Then replace the `script/embeddings/MolFormer/Pretrained Molformer` directory with the extracted folder.
+
 ## Generating Predictions 
 
 ### Data preparation
@@ -55,14 +61,22 @@ Input data must be provided as a .csv file containing:
 - **Column 0:** Index
 - **Column 1:** Target organism
 - **Column 2:** Compund Smiles
-- **Columns 3-765:** MolFormer embeddings (see: https://github.com/IBM/molformer#feature-extraction)
+- **Columns 3-765:** MolFormer embeddings
 - **Columns 766-:** RDKit molecular descriptors
 
-MolFormer requires a dedicated environment, and its embeddings must be computed using the original implementation prior to downstream prediction tasks. Owing to library compatibility constraints, we are unable to provide an embedding generation script within this repository.
+MolFormer embeddings can be calculated using
+
+```bash
+conda activate MolTran # Substitute with the name given to the MolFormer enviroment
+python main.py embeddings "input_csv_path" "output_csv_path" "organism_column_name" "smiles_column_name"
+```
+
+or using `script.embeddings.Molformer.molformer.compute_embeddings` function
 
 Once you have columns 0-765, RDKit descriptros can be calculated using
 
 ```bash
+conda activate antibiofilm
 python main.py descriptors "input_csv_path", "smiles_column_name", "output_csv_path"
 
 ```
