@@ -56,6 +56,8 @@ Input data must be provided as a .csv file containing:
 - **Columns 3-765:** MolFormer embeddings (see: https://github.com/IBM/molformer#feature-extraction)
 - **Columns 766-:** RDKit molecular descriptors
 
+MolFormer requires a dedicated environment, and its embeddings must be computed using the original implementation prior to downstream prediction tasks. Owing to library compatibility constraints, we are unable to provide an embedding generation script within this repository.
+
 Once you have columns 0-765, RDKit descriptros can be calculated using
 
 ```bash
