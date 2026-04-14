@@ -42,36 +42,104 @@ conda activate antibiofilm
 
 All models were trained using PyTorch 2.x with CUDA 11.x support.
 
+### Molformer dependencies
+
+MolFormer requires a separate Conda enviroment. Please, follow the installation instructions at https://github.com/IBM/molformer/blob/main/environment.md to set it up.
+
+### Molformer checkpoints
+
+Download and extract the `Pretrained MolFormer` folder from https://ibm.ent.box.com/v/MoLFormer-data/file/1099206797207.
+
+Then replace the `script/embeddings/MolFormer/Pretrained Molformer` directory with the extracted folder.
+
 ## Generating Predictions 
 
+### Summary
 
+To generate predictions for compounds in a file containing a SMILES column against all modelled organisms, follow these steps:
+
+```bash
+conda activate antibiofilm
+python main.py organisms "path to input file" organisms.csv "name of smiles column"
+conda activate MolTran
+python main.py embeddings organisms.csv embeddings.csv target_organism smiles
+conda activate antibiofilm
+python main.py descriptors embeddings.csv smiles descriptors.csv
+python main.py prediction descriptors.csv target_organism "path to output file"
+
+```
+**Notes**
+- `organisms.csv`, `embeddings.csv` and `descriptors.csv` are intermediate files that store:
+    - SMILES-organism combinations
+    - SMILES-organism combinations and MolFormer Embeddings
+    - SMILES-organism combinations, MolFormer Embeddings and molecular descriptors
+- These filenames can be replaced with a temporary file (e.g., temp.csv) that is overwritten at each step and removed at the end.
 
 ### Data preparation
 
+This section includes the instructions to prepare the data
 Input data must be provided as a .csv file containing:
 
 - **Column 0:** Index
 - **Column 1:** Target organism
 - **Column 2:** Compund Smiles
-- **Columns 3-765:** MolFormer embeddings (see: https://github.com/IBM/molformer#feature-extraction)
+- **Columns 3-765:** MolFormer embeddings
 - **Columns 766-:** RDKit molecular descriptors
 
-MolFormer requires a dedicated environment, and its embeddings must be computed using the original implementation prior to downstream prediction tasks. Owing to library compatibility constraints, we are unable to provide an embedding generation script within this repository.
+#### (Optional) Smiles / organims combinations
 
+This script generates all possible SMILES–organism combinations from an input file containing a column of SMILES strings.
+
+```bash
+python main.py organisms "input_csv_path" "output_csv_path" "smiles_column_name"
+```
+
+By default, organisms are obtained from the encoder located at `antibiofilm checkpoint/encoder.pkl`. If the encoder is stored in a diferent path, you can specify it using the `--organism_encoder_path` argument.
+
+```bash
+python main.py organisms "input_csv_path" "output_csv_path" "smiles_column_name" \
+        --organism_encoder_path "path to the organism encoder"
+```
+
+You can also provide a list of target organisms using the `--organisms` argument. For example:
+
+```bash
+python main.py organisms "input_csv_path" "output_csv_path" "smiles_column_name" \
+        --organisms "Streptococcus mutans" "Staphylococcus aureus"
+```
+
+These combinations can also be generated programmatically with the `script.utils.organisms.generate_organism_file` function.
+
+#### MolFormer embeddings
+MolFormer embeddings can be calculated using
+
+```bash
+conda activate MolTran # Substitute with the name given to the MolFormer enviroment
+python main.py embeddings "input_csv_path" "output_csv_path" "organism_column_name" "smiles_column_name"
+```
+
+or programmatically, using `script.embeddings.Molformer.molformer.compute_embeddings` function
+
+The script will save a .csv file with columns 0-765
+
+#### Descriptors
 Once you have columns 0-765, RDKit descriptros can be calculated using
 
 ```bash
+conda activate antibiofilm
 python main.py descriptors "input_csv_path", "smiles_column_name", "output_csv_path"
 
 ```
 
-or using `script.utils.molecular_descriptors.get_descriptors` function
+or programmatically, using `script.utils.molecular_descriptors.get_descriptors` function
 
 ### Running Predictions
 
 Model checkpoints, normalization parameters, and organism encoders are stored in the `antibiofilm_checkpoint` directory.
 
 #### From command line interface
+
+Once you have a csv file prepared as indicated in the previous section, you can run the model using the following command:
 
 ```bash
 python main.py prediction "input_csv_path", "organism_column_name", "output_csv_path"
@@ -90,10 +158,10 @@ python main.py prediction "input_csv_path", "organism_column_name", "output_csv_
     --model_checkpoint_path "Path to the model checkpoint"
 
 ```
+**Notes:**
+- Arguments `--features-start`, `--features-end`, `normalizer-start` and `normalizer-end` are only necessary if the input file does not follow the structure described in the **Data preparation** section. If `features-end` or `normalizer-end` are not indicated, the script will read all columns from the corresponding -start index to the end.
 
-Arguments `--features-start`, `--features-end`, `normalizer-start` and `normalizer-end` are only necessary if the input file does not follow the structure described in the **Data preparation** section. If `features-end` or `normalizer-end` are not indicated, the script will read all columns from the corresponding -start index to the end.
-
-By default, the script will load the organism encoder, the normalizer and the model checkpoint located at the `antibiofilm_checkpoint` directory. If they are located elsewhere, their paths can be indicated using `--organism_encode_path`, `--normalizer_path` and `--model_checkpoint_path`.
+- By default, the script will load the organism encoder, the normalizer and the model checkpoint located at the `antibiofilm_checkpoint` directory. If they are located elsewhere, their paths can be indicated using `--organism_encode_path`, `--normalizer_path` and `--model_checkpoint_path`.
 
 #### Using Python code
 
@@ -130,8 +198,7 @@ with torch.no_grad():
 
 ```
 
-
-## General usage of the module
+## Training a model
 
 All scripts used in the manuscript are available in the `experiments` folder.
 
