@@ -3,3 +3,6 @@ private_data
 .vscode
 *__pycache__
 *.db
+*.ckpt
+.DS_Store
+*.tfevents.*
