@@ -2,8 +2,8 @@ from argparse import Namespace
 import yaml
 import os
 from pathlib import Path
-from tokenizer.tokenizer import MolTranBertTokenizer
-from train_pubchem_light import LightningModule
+from .tokenizer.tokenizer import MolTranBertTokenizer
+from .train_pubchem_light import LightningModule
 import torch
 from fast_transformers.masking import LengthMask as LM
 import pandas as pd
@@ -26,7 +26,7 @@ def compute_embeddings(input_file: str, output_file: str, smiles_column: str, or
     embeddings_df = pd.DataFrame(X, index=df.index)
     embeddings_df.to_csv(output_file)
     merged_df = pd.concat([df[[organism_column, smiles_column]], embeddings_df], axis=1)
-    merged_df.to_csv(output_file)
+    merged_df.to_csv(output_file, index=False)
 
 def batch_split(data, batch_size=64):
     i = 0

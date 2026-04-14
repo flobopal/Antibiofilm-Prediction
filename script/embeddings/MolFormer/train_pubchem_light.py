@@ -4,8 +4,12 @@ import torch
 import shutil
 import rdkit
 from torch import nn
-import args
 import os
+import sys
+
+sys.path.append(os.path.dirname(os.path.realpath(__file__)))
+
+import args
 from pathlib import Path
 import numpy as np
 import random
