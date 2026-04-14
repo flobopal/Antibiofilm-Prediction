@@ -48,11 +48,32 @@ MolFormer requires a separate Conda enviroment. Please, follow the installation 
 
 ### Molformer checkpoints
 
-Download and extract the `Pretrained MolFormer` folder from https://ibm.ent.box.com/v/MoLFormer-data/file/1099206797207
+Download and extract the `Pretrained MolFormer` folder from https://ibm.ent.box.com/v/MoLFormer-data/file/1099206797207.
 
 Then replace the `script/embeddings/MolFormer/Pretrained Molformer` directory with the extracted folder.
 
 ## Generating Predictions 
+
+### Summary
+
+To generate predictions for compounds in a file containing a SMILES column against all modelled organisms, follow these steps:
+
+```bash
+conda activate antibiofilm
+python main.py organisms "path to input file" organisms.csv "name of smiles column"
+conda activate MolTran
+python main.py embeddings organisms.csv embeddings.csv target_organism smiles
+conda activate antibiofilm
+python main.py descriptors embeddings.csv smiles descriptors.csv
+python main.py prediction descriptors.csv target_organism "path to output file"
+
+```
+**Notes**
+- `organisms.csv`, `embeddings.csv` and `descriptors.csv` are intermediate files that store:
+    - SMILES-organism combinations
+    - SMILES-organism combinations and MolFormer Embeddings
+    - SMILES-organism combinations, MolFormer Embeddings and molecular descriptors
+- These filenames can be replaced with a temporary file (e.g., temp.csv) that is overwritten at each step and removed at the end.
 
 ### Data preparation
 
@@ -118,6 +139,8 @@ Model checkpoints, normalization parameters, and organism encoders are stored in
 
 #### From command line interface
 
+Once you have a csv file prepared as indicated in the previous section, you can run the model using the following command:
+
 ```bash
 python main.py prediction "input_csv_path", "organism_column_name", "output_csv_path"
 
@@ -135,10 +158,10 @@ python main.py prediction "input_csv_path", "organism_column_name", "output_csv_
     --model_checkpoint_path "Path to the model checkpoint"
 
 ```
+**Notes:**
+- Arguments `--features-start`, `--features-end`, `normalizer-start` and `normalizer-end` are only necessary if the input file does not follow the structure described in the **Data preparation** section. If `features-end` or `normalizer-end` are not indicated, the script will read all columns from the corresponding -start index to the end.
 
-Arguments `--features-start`, `--features-end`, `normalizer-start` and `normalizer-end` are only necessary if the input file does not follow the structure described in the **Data preparation** section. If `features-end` or `normalizer-end` are not indicated, the script will read all columns from the corresponding -start index to the end.
-
-By default, the script will load the organism encoder, the normalizer and the model checkpoint located at the `antibiofilm_checkpoint` directory. If they are located elsewhere, their paths can be indicated using `--organism_encode_path`, `--normalizer_path` and `--model_checkpoint_path`.
+- By default, the script will load the organism encoder, the normalizer and the model checkpoint located at the `antibiofilm_checkpoint` directory. If they are located elsewhere, their paths can be indicated using `--organism_encode_path`, `--normalizer_path` and `--model_checkpoint_path`.
 
 #### Using Python code
 
@@ -175,8 +198,7 @@ with torch.no_grad():
 
 ```
 
-
-## General usage of the module
+## Training a model
 
 All scripts used in the manuscript are available in the `experiments` folder.
 
