@@ -77,7 +77,8 @@ python main.py prediction descriptors.csv target_organism "path to output file"
 
 ### Data preparation
 
-This section includes the instructions to prepare the data
+This section includes the instructions to prepare the data.
+
 Input data must be provided as a .csv file containing:
 
 - **Column 0:** Index
@@ -86,7 +87,7 @@ Input data must be provided as a .csv file containing:
 - **Columns 3-765:** MolFormer embeddings
 - **Columns 766-:** RDKit molecular descriptors
 
-#### (Optional) Smiles / organims combinations
+#### (Optional) Smiles / organism combinations
 
 This script generates all possible SMILES–organism combinations from an input file containing a column of SMILES strings.
 
@@ -123,7 +124,7 @@ or programmatically, using `script.embeddings.Molformer.molformer.compute_embedd
 The script will save a .csv file with columns 0-765
 
 #### Descriptors
-Once you have columns 0-765, RDKit descriptros can be calculated using
+Once you have columns 0-765, RDKit descriptors can be calculated using
 
 ```bash
 conda activate antibiofilm
