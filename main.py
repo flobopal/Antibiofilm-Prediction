@@ -46,7 +46,7 @@ def parse_prediction(args: argparse.Namespace):
     model.eval()
     with torch.no_grad():
         y_pred = model.forward(Xd, Xp)
-    df = pd.read_csv(args.input).copy()
+    df = pd.read_csv(args.input).iloc[:,:args.features_start].copy()
     df['prediction'] = y_pred
     df.to_csv(args.output, index=False)
     

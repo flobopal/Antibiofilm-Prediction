@@ -42,11 +42,11 @@ conda activate antibiofilm
 
 All models were trained using PyTorch 2.x with CUDA 11.x support.
 
-#### Molformer dependencies
+### Molformer dependencies
 
 MolFormer requires a separate Conda enviroment. Please, follow the installation instructions at https://github.com/IBM/molformer/blob/main/environment.md to set it up.
 
-#### Molformer checkpoints
+### Molformer checkpoints
 
 Download and extract the `Pretrained MolFormer` folder from https://ibm.ent.box.com/v/MoLFormer-data/file/1099206797207
 
@@ -56,6 +56,7 @@ Then replace the `script/embeddings/MolFormer/Pretrained Molformer` directory wi
 
 ### Data preparation
 
+This section includes the instructions to prepare the data
 Input data must be provided as a .csv file containing:
 
 - **Column 0:** Index
@@ -64,6 +65,31 @@ Input data must be provided as a .csv file containing:
 - **Columns 3-765:** MolFormer embeddings
 - **Columns 766-:** RDKit molecular descriptors
 
+#### (Optional) Smiles / organims combinations
+
+This script generates all possible SMILES–organism combinations from an input file containing a column of SMILES strings.
+
+```bash
+python main.py organisms "input_csv_path" "output_csv_path" "smiles_column_name"
+```
+
+By default, organisms are obtained from the encoder located at `antibiofilm checkpoint/encoder.pkl`. If the encoder is stored in a diferent path, you can specify it using the `--organism_encoder_path` argument.
+
+```bash
+python main.py organisms "input_csv_path" "output_csv_path" "smiles_column_name" \
+        --organism_encoder_path "path to the organism encoder"
+```
+
+You can also provide a list of target organisms using the `--organisms` argument. For example:
+
+```bash
+python main.py organisms "input_csv_path" "output_csv_path" "smiles_column_name" \
+        --organisms "Streptococcus mutans" "Staphylococcus aureus"
+```
+
+These combinations can also be generated programmatically with the `script.utils.organisms.generate_organism_file` function.
+
+#### MolFormer embeddings
 MolFormer embeddings can be calculated using
 
 ```bash
@@ -71,8 +97,11 @@ conda activate MolTran # Substitute with the name given to the MolFormer envirom
 python main.py embeddings "input_csv_path" "output_csv_path" "organism_column_name" "smiles_column_name"
 ```
 
-or using `script.embeddings.Molformer.molformer.compute_embeddings` function
+or programmatically, using `script.embeddings.Molformer.molformer.compute_embeddings` function
 
+The script will save a .csv file with columns 0-765
+
+#### Descriptors
 Once you have columns 0-765, RDKit descriptros can be calculated using
 
 ```bash
@@ -81,7 +110,7 @@ python main.py descriptors "input_csv_path", "smiles_column_name", "output_csv_p
 
 ```
 
-or using `script.utils.molecular_descriptors.get_descriptors` function
+or programmatically, using `script.utils.molecular_descriptors.get_descriptors` function
 
 ### Running Predictions
 
