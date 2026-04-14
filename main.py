@@ -1,6 +1,14 @@
 import argparse
 from pathlib import Path
-import pandas as pd
+
+def parse_organism(args: argparse.Namespace):
+    from script.utils.organisms import generate_organism_file
+    generate_organism_file(
+        args.input,
+        args.output,
+        args.smiles_column,
+        args.organisms,
+        args.organism_encoder_path)
 
 def parse_embeddings(args: argparse.Namespace):
     from script.embeddings.MolFormer.molformer import compute_embeddings
@@ -31,6 +39,8 @@ def parse_data(args: argparse.Namespace):
 def parse_prediction(args: argparse.Namespace):
     from model.full_model import FullModel
     import torch
+    import pandas as pd
+
     model = FullModel.load(args.model_checkpoint_path)
     Xd, Xp, _ = parse_data(args)
     model.eval()
@@ -51,6 +61,40 @@ parser = argparse.ArgumentParser(
 
 subparsers = parser.add_subparsers(
     help="Commands"
+)
+
+organisms_parser = subparsers.add_parser(
+    "organisms",
+    help="Script to create a dataframe with all smiles / organisms combinations"
+)
+
+organisms_parser.set_defaults(func=parse_organism)
+
+organisms_parser.add_argument(
+    "input",
+    help="Path to the csv file with the smiles"
+)
+
+organisms_parser.add_argument(
+    "output",
+    help="Path to the output csv file"
+)
+
+organisms_parser.add_argument(
+    "smiles_column",
+    help="Name of the column containing smiles"
+)
+
+organisms_parser.add_argument(
+    "--organisms",
+    nargs='+',
+    help="List of organisms to include"
+)
+
+organisms_parser.add_argument(
+    "--organism_encoder_path",
+    help="path to the organism encoder",
+    default=Path("antibiofilm checkpoint/encoder.pkl")
 )
 
 embeddings_parser = subparsers.add_parser(
