@@ -42,9 +42,11 @@ conda activate antibiofilm
 
 All models were trained using PyTorch 2.x with CUDA 11.x support.
 
+#### Molformer dependencies
+
+MolFormer requires a separate Conda enviroment. Please, follow the installation instructions at https://github.com/IBM/molformer/blob/main/environment.md to set it up.
+
 ## Generating Predictions 
-
-
 
 ### Data preparation
 
