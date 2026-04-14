@@ -3,11 +3,15 @@ import torch
 import numpy as np
 import random
 import collections
+import os
+from pathlib import Path
+
+DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 
 class Encoder():
 
     def __init__(self, max_length=500, add_bos=True, add_eos=True, feature_size=32):
-        self.vocab_encoder = torch.load('pubchem_canon_zinc_final_vocab_sorted.pth')
+        self.vocab_encoder = torch.load(DIR / 'pubchem_canon_zinc_final_vocab_sorted.pth')
 
         self.max_length = max_length
         self.min_length = 1

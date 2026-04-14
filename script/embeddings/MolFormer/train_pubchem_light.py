@@ -6,6 +6,7 @@ import rdkit
 from torch import nn
 import args
 import os
+from pathlib import Path
 import numpy as np
 import random
 import getpass
@@ -27,6 +28,7 @@ from apex import optimizers
 from torch.utils.data import DataLoader
 import subprocess
 
+DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 class LightningModule(pl.LightningModule):
 
     def __init__(self, config, vocab):
@@ -250,18 +252,18 @@ class MoleculeModule(pl.LightningDataModule):
     def setup(self, stage=None):
         #using huggingface dataloader
         # create cache in tmp directory of locale mabchine under the current users name to prevent locking issues
-        pubchem_path = {'train':'../data/pubchem/CID-SMILES-CANONICAL.smi'}
+        pubchem_path = {'train': DIR.parent / Path('data', 'pubchem', 'CID-SMILES-CANONICAL.smi')}
         if 'CANONICAL' in pubchem_path:
-            pubchem_script = './pubchem_canon_script.py'
+            pubchem_script = DIR / 'pubchem_canon_script.py'
         else:
-            pubchem_script = './pubchem_script.py'
-        zinc_path = '../data/ZINC'
+            pubchem_script = DIR / 'pubchem_script.py'
+        zinc_path = DIR.parent / Path('data', 'ZINC')
         if 'ZINC' in self.data_path or 'zinc' in self.data_path:
             zinc_files = [f for f in glob.glob(os.path.join(zinc_path,'*.smi'))]
             for zfile in zinc_files:
                 print(zfile)
             self.data_path = {'train': zinc_files}
-            dataset_dict = load_dataset('./zinc_script.py', data_files=self.data_path, cache_dir=os.path.join('/tmp',getpass.getuser(), 'zinc'),split='train')
+            dataset_dict = load_dataset(DIR / 'zinc_script.py', data_files=self.data_path, cache_dir=os.path.join('/tmp',getpass.getuser(), 'zinc'),split='train')
 
         elif 'pubchem' in self.data_path:
             dataset_dict =  load_dataset(pubchem_script, data_files=pubchem_path, cache_dir=os.path.join('/tmp',getpass.getuser(), 'pubchem'), split='train')
@@ -271,7 +273,7 @@ class MoleculeModule(pl.LightningDataModule):
             for zfile in zinc_files:
                 print(zfile)
             self.data_path = {'train': zinc_files}
-            dataset_dict_zinc =  load_dataset('./zinc_script.py', data_files=self.data_path, cache_dir=os.path.join('/tmp',getpass.getuser(), 'zinc'),split='train')
+            dataset_dict_zinc =  load_dataset(DIR / 'zinc_script.py', data_files=self.data_path, cache_dir=os.path.join('/tmp',getpass.getuser(), 'zinc'),split='train')
             dataset_dict = concatenate_datasets([dataset_dict_zinc, dataset_dict_pubchem])
         self.pubchem= dataset_dict
         print(dataset_dict.cache_files)
