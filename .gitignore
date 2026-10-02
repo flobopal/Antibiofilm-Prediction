@@ -6,3 +6,4 @@ private_data
 *.ckpt
 .DS_Store
 *.tfevents.*
+experiments_old
