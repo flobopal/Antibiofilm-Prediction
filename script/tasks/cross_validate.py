@@ -179,7 +179,7 @@ def cross_validate(
                 *X_test, y_test = validation_tensors
             y_pred = model(*(X.to(device) for X in X_test))
             validation_value = evaluate(
-                metrics, y_test, y_pred, weights
+                metrics, y_test, y_pred, sample_weight=weights
             )
         else:
             criterion = get_criterion(
