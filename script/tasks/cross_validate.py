@@ -1,15 +1,16 @@
-from typing import Callable, Literal, Optional
-import pandas as pd
-from sklearn.model_selection import KFold
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
-from torch.utils.data import TensorDataset, DataLoader, Subset
-import torch
-import numpy as np
-from script.tasks.train import train_model, get_criterion, validate_one_epoch
-from script.utils.metrics import evaluate
 import gc
 import os
+import pandas as pd
+import torch
+import numpy as np
+from typing import Callable, Optional
+
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from torch.utils.data import TensorDataset, DataLoader
+from script.tasks.train import train_model, get_criterion, validate_one_epoch
+from script.utils.metrics import evaluate
 from script.utils.data_load import get_features_array
+from script.utils.weights import organism_loss_weights
 
 
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
@@ -33,7 +34,6 @@ def cross_validate(
     dataset: pd.DataFrame,
     model_factory: Callable[[int, int], torch.nn.Module],
     features_start: int | str,
-    organism_column: str,
     output_column: str,
     optimizer_class: type[torch.optim.Optimizer],
     optimizer_kwargs: dict,
@@ -53,6 +53,8 @@ def cross_validate(
     metrics: Optional[str] = None,
     after_fold_callback: Optional[Callable[[int, float], None]] = None,
     include_organism_features: bool = True,
+    balance_organism: bool = False,
+    organism_column: Optional[str] = None,
 ) -> list[float]:
     """
     Performs K-fold cross-validation on a given PyTorch model.
@@ -91,14 +93,16 @@ def cross_validate(
         get_features_array(dataset, features_start, features_end),
         dtype=np.float32,
     )
-    organisms = dataset[organism_column].to_numpy()
     targets = dataset[output_column].to_numpy(dtype=np.float32)
+    if organism_column is not None:
+        organisms = dataset[organism_column].to_numpy()
 
     values = []
     fold_iterator = (
         (np.flatnonzero(fold_labels != fold_value), np.flatnonzero(fold_labels == fold_value))
         for fold_value in fold_values
     )
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     for fold, (train_idx, val_idx) in enumerate(fold_iterator):
         clean()
@@ -119,6 +123,8 @@ def cross_validate(
             )
 
         if include_organism_features:
+            if organism_column is None:
+                raise ValueError("organism_column must be provided if include_organism_features is True")
             encoder = OneHotEncoder(
                 handle_unknown="ignore",
                 sparse_output=False,
@@ -134,13 +140,20 @@ def cross_validate(
                 torch.from_numpy(Xd_val),
                 torch.from_numpy(Xp_val),
             )
+            model = model_factory(Xd_train.shape[1], Xp_train.shape[1])
         else:
             train_inputs = (torch.from_numpy(Xd_train),)
             val_inputs = (torch.from_numpy(Xd_val),)
+            model = model_factory(Xd_train.shape[1], 0)
 
         train_tensors = (*train_inputs, torch.from_numpy(targets[train_idx]))
-        train_dataset = TensorDataset(*train_tensors)
         val_tensors = (*val_inputs, torch.from_numpy(targets[val_idx]))
+        if balance_organism:
+            if organism_column is None:
+                raise ValueError("organism_column must be provided if balance_organism is True")
+            train_tensors += (organism_loss_weights(organisms[train_idx]),)
+            val_tensors += (organism_loss_weights(organisms[val_idx]),)
+        train_dataset = TensorDataset(*train_tensors)
         val_dataset = TensorDataset(*val_tensors)
         train_loader = DataLoader(
             train_dataset, batch_size=batch_size, shuffle=True
@@ -148,7 +161,7 @@ def cross_validate(
         val_loader = DataLoader(
             val_dataset, batch_size=batch_size, shuffle=False
         )
-        model = model_factory(Xd_train.shape[1], Xp_train.shape[1])
+        
         optimizer = optimizer_class(model.parameters(), **optimizer_kwargs)
         train_model(
             model=model,
@@ -161,24 +174,27 @@ def cross_validate(
             scheduler_name=scheduler_name,
             scheduler_kwargs=scheduler_kwargs,
             verbose=verbose,
+            weighted_loss=balance_organism,
+            weighted_val_loss=balance_organism,
         )
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         model.eval()
         if metrics is not None:
             validation_tensors = tuple(map(torch.cat, zip(*val_loader)))
             weights = None
-            *X_test, y_test = validation_tensors
+            if balance_organism:
+                *X_test, y_test, weights = validation_tensors
+            else:
+                *X_test, y_test = validation_tensors
             y_pred = model(*(X.to(device) for X in X_test))
             validation_value = evaluate(
-                metrics, y_test, y_pred, sample_weight=weights,
-                organisms=organisms[val_idx] if organisms is not None else None,
+                metrics, y_test, y_pred, weights
             )
         else:
             criterion = get_criterion(
-                task_type, use_logits
+                task_type, use_logits, reduction="none" if balance_organism else "mean"
             )
             validation_value = validate_one_epoch(
-                model, val_loader, criterion, device
+                model, val_loader, criterion, device, weighted_loss=balance_organism
             )
         values.append(validation_value)
 

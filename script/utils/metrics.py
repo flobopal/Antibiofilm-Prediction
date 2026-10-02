@@ -16,5 +16,16 @@ def to_cpu(array: numpy.ndarray | torch.Tensor) -> numpy.ndarray:
         return array.detach().cpu().numpy()
     return array
 
-def evaluate(metric: str, *args: numpy.ndarray | torch.Tensor) -> float:
-    return metrics_dict.get(metric)(*map(to_cpu, args))
+def evaluate(
+    metric: str,
+    *args: numpy.ndarray | torch.Tensor,
+    sample_weight: numpy.ndarray | torch.Tensor | None = None,
+) -> float:
+    if metric not in metrics_dict:
+        raise ValueError(f"Metric '{metric}' is not supported. Supported metrics are: {list_metrics()}")
+    metric_func = metrics_dict[metric]
+    args = [to_cpu(arg) for arg in args]
+    kwargs = {}
+    if sample_weight is not None:
+        kwargs['sample_weight'] = to_cpu(sample_weight)
+    return metric_func(*args, **kwargs)
