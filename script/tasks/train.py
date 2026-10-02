@@ -163,7 +163,7 @@ def train_model(
     val_criterion = get_criterion(task_type, use_logits, reduction="none" if weighted_val_loss else "mean")
     scheduler = get_scheduler(optimizer, scheduler_name, **scheduler_kwargs or {})
     tqdm_bar = tqdm(range(num_epochs), desc="Training Progress", unit="epoch", colour="blue")
-    for epoch in range(num_epochs):
+    for epoch in range(tqdm_bar):
         train_loss = train_one_epoch(model, train_loader, train_criterion, optimizer, device, weighted_loss=weighted_loss)
         if val_loader is not None:
             val_loss = validate_one_epoch(model, val_loader, val_criterion, device, weighted_loss=weighted_val_loss)
