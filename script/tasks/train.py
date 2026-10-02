@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader
 from typing import Callable, Literal, Optional
-import numpy as np
+from tqdm import tqdm
 from script.utils.scheduler import get_scheduler
 
 def move_batch_to_device(
@@ -130,14 +130,13 @@ def train_model(
     num_epochs: int = 50,
     scheduler_name: Optional[str] = None,
     scheduler_kwargs: Optional[dict] = None,
-    verbose: bool = True
 ):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = model.to(device)
 
     criterion = get_criterion(task_type, use_logits)
     scheduler = get_scheduler(optimizer, scheduler_name, **scheduler_kwargs or {})
-
+    tqdm_bar = tqdm(range(num_epochs), desc="Training Progress", unit="epoch", colour="blue")
     for epoch in range(num_epochs):
         train_loss = train_one_epoch(model, train_loader, criterion, optimizer, device)
         if val_loader is not None:
@@ -150,8 +149,7 @@ def train_model(
             else:
                 scheduler.step()
 
-        if verbose:
-            if  val_loader is None:
-                print(f"Epoch {epoch+1}/{num_epochs} - Train Loss: {train_loss:.4f}")
-            else:
-                print(f"Epoch {epoch+1}/{num_epochs} - Train Loss: {train_loss:.4f} - Val Loss: {val_loss:.4f}")
+        tqdm_bar.set_postfix({
+            "train_loss": train_loss,
+            "val_loss": val_loss if val_loader is not None else "N/A"
+        })
