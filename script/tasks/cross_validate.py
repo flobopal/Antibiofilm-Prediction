@@ -105,8 +105,6 @@ def cross_validate(
         if verbose:
             print(f"\n--- Fold {fold + 1}/{k_folds} ---")
 
-        scales = None
-
         Xd_train = raw_features[train_idx].copy()
         Xd_val = raw_features[val_idx].copy()
         if normalize_features:
@@ -128,14 +126,6 @@ def cross_validate(
             )
             Xp_train = encoder.fit_transform(organisms[train_idx, None])
             Xp_val = encoder.transform(organisms[val_idx, None])
-        else:
-            Xp_train = np.empty((len(train_idx), 0), dtype=np.float32)
-            Xp_val = np.empty((len(val_idx), 0), dtype=np.float32)
-
-        if not include_organism_features:
-            train_inputs = (torch.from_numpy(Xd_train),)
-            val_inputs = (torch.from_numpy(Xd_val),)
-        else:
             train_inputs = (
                 torch.from_numpy(Xd_train),
                 torch.from_numpy(Xp_train),
@@ -144,6 +134,10 @@ def cross_validate(
                 torch.from_numpy(Xd_val),
                 torch.from_numpy(Xp_val),
             )
+        else:
+            train_inputs = (torch.from_numpy(Xd_train),)
+            val_inputs = (torch.from_numpy(Xd_val),)
+
         train_tensors = (*train_inputs, torch.from_numpy(targets[train_idx]))
         train_dataset = TensorDataset(*train_tensors)
         val_tensors = (*val_inputs, torch.from_numpy(targets[val_idx]))
