@@ -54,7 +54,7 @@ def cross_validate(
     include_organism_features: bool = True,
     balance_organism: bool = False,
     organism_column: Optional[str] = None,
-) -> list[float]:
+) -> list[float] | float:
     """
     Performs K-fold cross-validation on a given PyTorch model.
 
@@ -75,12 +75,26 @@ def cross_validate(
         verbose (bool, optional): Whether to print progress information. Defaults to True.
 
     Returns:
-        list: A list containing the validation loss for each fold.
+        list[float] | float: Per-fold scores for ordinary metrics/loss, or a
+            single max_rmse computed from all out-of-fold predictions.
+            max_rmse requires organism_column, even without organism features.
+            Per-fold metric callbacks are not supported for max_rmse.
     """
 
     fold_labels = dataset[fold_column]
     fold_values = fold_labels.unique()
     k_folds = len(fold_values)
+    pooled_metric = metrics == "max_rmse"
+    if pooled_metric:
+        if organism_column is None:
+            raise ValueError("organism_column must be provided for max_rmse")
+        if dataset[organism_column].isna().any():
+            raise ValueError("max_rmse requires nonmissing organism labels")
+        if k_folds < 2 or fold_labels.isna().any():
+            raise ValueError("max_rmse requires at least two nonmissing folds")
+        if after_fold_callback is not None:
+            raise ValueError("max_rmse has no per-fold scores for after_fold_callback")
+        oof_predictions = np.empty(len(dataset), dtype=np.float64)
 
     raw_features = np.asarray(
         get_features_array(dataset, features_start, features_end),
@@ -177,7 +191,13 @@ def cross_validate(
                 *X_test, y_test, weights = validation_tensors
             else:
                 *X_test, y_test = validation_tensors
-            y_pred = model(*(X.to(device) for X in X_test))
+            with torch.no_grad():
+                y_pred = model(*(X.to(device) for X in X_test))
+            if pooled_metric:
+                oof_predictions[val_idx] = y_pred.detach().cpu().numpy()
+                if verbose:
+                    print(f"Fold {fold + 1}: collected {len(val_idx)} OOF predictions")
+                continue
             validation_value = evaluate(
                 metrics, y_test, y_pred, sample_weight=weights
             )
@@ -200,4 +220,9 @@ def cross_validate(
         if after_fold_callback is not None:
             after_fold_callback(fold, validation_value)
 
+    if pooled_metric:
+        value = evaluate("max_rmse", targets, oof_predictions, organisms=organisms)
+        if verbose:
+            print(f"Pooled OOF max_rmse: {value:.4f}")
+        return value
     return values

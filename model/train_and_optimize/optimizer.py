@@ -9,6 +9,7 @@ from model.full_model import FullModel
 from model.interaction import MoleculeOrganismInteractionParams
 from script.tasks.cross_validate import cross_validate
 from script.utils.activation_functions import list_names
+from script.utils.metrics import list_metrics
 
 def clean():
     """
@@ -94,7 +95,7 @@ class Objective:
     def suggest_params(self, trial: optuna.Trial) -> dict:
         pass
 
-    def cross_validate(self, model_params: dict) -> list[float]:
+    def cross_validate(self, model_params: dict) -> float:
         values = cross_validate(
             self.dataset,
             self.model_factory(**model_params),
@@ -116,6 +117,8 @@ class Objective:
             scheduler_name=model_params["scheduler_name"],
             scheduler_kwargs=model_params["scheduler_kwargs"],
         )
+        if self.metrics == "max_rmse":
+            return values
         return sum(values) / len(values)
 
     
@@ -274,7 +277,13 @@ def do_study(
         include_organism_features: bool = True,
         fold_column: str | None = None,
         ):
+    """Optimize mean fold R2 (maximize) or pooled OOF max_rmse (minimize).
 
+    max_rmse groups predictions by organism_column and uses a standard
+    deviation floor of 0.1. Use a separate study name when changing metrics.
+    """
+    if metric not in list_metrics():
+        raise ValueError(f"Unsupported metric '{metric}'. Choose from {list_metrics()}")
     direction = "maximize" if metric in ["r2"] else "minimize"
 
 
@@ -284,6 +293,11 @@ def do_study(
         storage=database,
         load_if_exists=True,
     )
+    if study.direction.name.lower() != direction:
+        raise ValueError(
+            f"Study '{name}' uses {study.direction.name.lower()}, but metric "
+            f"'{metric}' requires {direction}. Use a new study name."
+        )
 
     study.optimize(
         objective(
