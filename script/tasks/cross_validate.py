@@ -82,12 +82,6 @@ def cross_validate(
     fold_values = fold_labels.unique()
     k_folds = len(fold_values)
 
-
-    required_columns = [organism_column, output_column]
-    missing = [column for column in required_columns if column not in dataset]
-    if missing:
-        raise KeyError(f"Columns not found in dataset: {missing}")
-
     raw_features = np.asarray(
         get_features_array(dataset, features_start, features_end),
         dtype=np.float32,
@@ -172,7 +166,6 @@ def cross_validate(
             num_epochs=num_epochs,
             scheduler_name=scheduler_name,
             scheduler_kwargs=scheduler_kwargs,
-            verbose=verbose,
             weighted_loss=balance_organism,
             weighted_val_loss=balance_organism,
         )
