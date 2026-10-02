@@ -111,6 +111,7 @@ class Objective:
             metrics=self.metrics,
             include_organism_features=self.include_organism_features,
             balance_organism=self.balance_organism,
+            organism_column=self.organism_column,
             num_epochs=model_params["num_epochs"],
             scheduler_name=model_params["scheduler_name"],
             scheduler_kwargs=model_params["scheduler_kwargs"],
@@ -178,27 +179,25 @@ class FullModelObjective(Objective):
 
 
     def model_factory(self, **model_kwargs) -> Callable[[int, int], FullModel]:
-        def _model_factory(Xd_dim: int, Xo_dim: int) -> torch.nn.Module:
+        def _model_factory(mol_input_dim: int, org_input_dim: int) -> torch.nn.Module:
             interaction_params = MoleculeOrganismInteractionParams(
-                Xd_dim=Xd_dim,
-                Xo_dim=Xo_dim,
+                mol_input_dim=mol_input_dim,
+                org_input_dim=org_input_dim,
                 embed_dim=model_kwargs["embed_dim"],
                 num_heads=model_kwargs["num_heads"],
                 pooling=model_kwargs["pooling"],
                 dropout=model_kwargs["dropout"],
             )
             decoder_params = FeedForwardNetworkParams(
-                input_dim=interaction_params.embed_dim,
+                input_dims=mol_input_dim,
                 hidden_dims=model_kwargs["hidden_dims"],
                 activations=model_kwargs["activations"],
                 dropout=model_kwargs["dropout"],
                 last_activation_params=model_kwargs["last_activation_params"]
             )
             return FullModel(
-                Xd_dim=Xd_dim,
-                Xo_dim=Xo_dim,
-                interaction_params=interaction_params,
-                decoder_params=decoder_params
+                mo_params=interaction_params,
+                ff_params=decoder_params
             )
         return _model_factory
 
@@ -251,9 +250,9 @@ class FeedForwardObjective(Objective):
 
     def model_factory(self, **model_kwargs) -> Callable[[int, int], FeedForwardNetwork]:
 
-        def _model_factory(Xd_dim: int, Xo_dim: int) -> torch.nn.Module:
+        def _model_factory(mol_input_dim: int, org_input_dim: int) -> torch.nn.Module:
             params = FeedForwardNetworkParams(
-                input_dim=Xd_dim + Xo_dim,
+                input_dims=mol_input_dim + org_input_dim,
                 hidden_dims=model_kwargs["hidden_dims"],
                 activations=model_kwargs["activations"],
                 dropout=model_kwargs["dropout"],
