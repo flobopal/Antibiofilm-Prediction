@@ -1,5 +1,7 @@
-from typing import Optional
+from typing import Callable, Literal, Optional
+import pandas as pd
 from sklearn.model_selection import KFold
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from torch.utils.data import TensorDataset, DataLoader, Subset
 import torch
 import numpy as np
@@ -7,6 +9,8 @@ from script.tasks.train import train_model, get_criterion, validate_one_epoch
 from script.utils.metrics import evaluate
 import gc
 import os
+from script.utils.data_load import get_features_array
+
 
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 
@@ -25,16 +29,20 @@ def clean():
     torch.cuda.empty_cache()
     torch.cuda.ipc_collect()
 
-def cross_validate_model(
-    
-    model_class: type,
-    model_kwargs: dict,
-    Xd: torch.Tensor,
-    Xp: torch.Tensor,
-    y: torch.Tensor,
-    optimizer_class: torch.optim.Optimizer,
+def cross_validate(
+    dataset: pd.DataFrame,
+    model_factory: Callable[[int, int], torch.nn.Module],
+    features_start: int | str,
+    organism_column: str,
+    output_column: str,
+    optimizer_class: type[torch.optim.Optimizer],
     optimizer_kwargs: dict,
     task_type: str,
+    fold_column: str = "kfold",
+    features_end: int | str | None = None,
+    normalize_features: bool = True,
+    normalizer_start: int | None = None,
+    normalizer_end: int | None = None,
     use_logits: bool = True,
     k_folds: int = 5,
     num_epochs: int = 50,
@@ -42,8 +50,10 @@ def cross_validate_model(
     scheduler_kwargs: Optional[dict] = None,
     batch_size: int = 64,
     verbose: bool = True,
-    metrics: Optional[str] = None
-):
+    metrics: Optional[str] = None,
+    after_fold_callback: Optional[Callable[[int, float], None]] = None,
+    include_organism_features: bool = True,
+) -> list[float]:
     """
     Performs K-fold cross-validation on a given PyTorch model.
 
@@ -66,26 +76,86 @@ def cross_validate_model(
     Returns:
         list: A list containing the validation loss for each fold.
     """
-    dataset = TensorDataset(Xd, Xp, y)
-    kf = KFold(n_splits=k_folds, shuffle=True, random_state=42)
-    val_losses = []
 
-    for fold, (train_idx, val_idx) in enumerate(kf.split(Xd)):
+    fold_labels = dataset[fold_column]
+    fold_values = fold_labels.unique()
+    k_folds = len(fold_values)
+
+
+    required_columns = [organism_column, output_column]
+    missing = [column for column in required_columns if column not in dataset]
+    if missing:
+        raise KeyError(f"Columns not found in dataset: {missing}")
+
+    raw_features = np.asarray(
+        get_features_array(dataset, features_start, features_end),
+        dtype=np.float32,
+    )
+    organisms = dataset[organism_column].to_numpy()
+    targets = dataset[output_column].to_numpy(dtype=np.float32)
+
+    values = []
+    fold_iterator = (
+        (np.flatnonzero(fold_labels != fold_value), np.flatnonzero(fold_labels == fold_value))
+        for fold_value in fold_values
+    )
+
+    for fold, (train_idx, val_idx) in enumerate(fold_iterator):
         clean()
         if verbose:
             print(f"\n--- Fold {fold + 1}/{k_folds} ---")
 
-        # Dataloaders
-        train_subset = Subset(dataset, train_idx)
-        val_subset = Subset(dataset, val_idx)
-        train_loader = DataLoader(train_subset, batch_size=batch_size, shuffle=True)
-        val_loader = DataLoader(val_subset, batch_size=batch_size, shuffle=False)
+        scales = None
 
-        # Initialize new model
-        model = model_class(**model_kwargs)
+        Xd_train = raw_features[train_idx].copy()
+        Xd_val = raw_features[val_idx].copy()
+        if normalize_features:
+            scaler = StandardScaler()
+            train_slice = Xd_train[:, normalizer_start:normalizer_end]
+            val_slice = Xd_val[:, normalizer_start:normalizer_end]
+            Xd_train[:, normalizer_start:normalizer_end] = (
+                scaler.fit_transform(train_slice)
+            )
+            Xd_val[:, normalizer_start:normalizer_end] = scaler.transform(
+                val_slice
+            )
+
+        if include_organism_features:
+            encoder = OneHotEncoder(
+                handle_unknown="ignore",
+                sparse_output=False,
+                dtype=np.float32,
+            )
+            Xp_train = encoder.fit_transform(organisms[train_idx, None])
+            Xp_val = encoder.transform(organisms[val_idx, None])
+        else:
+            Xp_train = np.empty((len(train_idx), 0), dtype=np.float32)
+            Xp_val = np.empty((len(val_idx), 0), dtype=np.float32)
+
+        if not include_organism_features:
+            train_inputs = (torch.from_numpy(Xd_train),)
+            val_inputs = (torch.from_numpy(Xd_val),)
+        else:
+            train_inputs = (
+                torch.from_numpy(Xd_train),
+                torch.from_numpy(Xp_train),
+            )
+            val_inputs = (
+                torch.from_numpy(Xd_val),
+                torch.from_numpy(Xp_val),
+            )
+        train_tensors = (*train_inputs, torch.from_numpy(targets[train_idx]))
+        train_dataset = TensorDataset(*train_tensors)
+        val_tensors = (*val_inputs, torch.from_numpy(targets[val_idx]))
+        val_dataset = TensorDataset(*val_tensors)
+        train_loader = DataLoader(
+            train_dataset, batch_size=batch_size, shuffle=True
+        )
+        val_loader = DataLoader(
+            val_dataset, batch_size=batch_size, shuffle=False
+        )
+        model = model_factory(Xd_train.shape[1], Xp_train.shape[1])
         optimizer = optimizer_class(model.parameters(), **optimizer_kwargs)
-
-        # Training
         train_model(
             model=model,
             train_loader=train_loader,
@@ -96,19 +166,36 @@ def cross_validate_model(
             num_epochs=num_epochs,
             scheduler_name=scheduler_name,
             scheduler_kwargs=scheduler_kwargs,
-            verbose=verbose
+            verbose=verbose,
         )
-
-        # Final fold validation
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         model.eval()
         if metrics is not None:
-            Xd_test, Xp_test, y_test = map(torch.cat,zip(*list(val_loader)))
-            y_pred = model(Xd_test.to(device), Xp_test.to(device))
-            val_losses.append(evaluate(metrics, y_test, y_pred))
+            validation_tensors = tuple(map(torch.cat, zip(*val_loader)))
+            weights = None
+            *X_test, y_test = validation_tensors
+            y_pred = model(*(X.to(device) for X in X_test))
+            validation_value = evaluate(
+                metrics, y_test, y_pred, sample_weight=weights,
+                organisms=organisms[val_idx] if organisms is not None else None,
+            )
         else:
-            criterion = get_criterion(task_type, use_logits)
-            val_loss = validate_one_epoch(model, val_loader, criterion, device)
-            val_losses.append(val_loss)
+            criterion = get_criterion(
+                task_type, use_logits
+            )
+            validation_value = validate_one_epoch(
+                model, val_loader, criterion, device
+            )
+        values.append(validation_value)
 
-    return val_losses
+        if verbose:
+            metric_name = metrics if metrics is not None else "loss"
+            print(
+                f"Fold {fold + 1} final validation {metric_name}: "
+                f"{validation_value:.4f}"
+            )
+
+        if after_fold_callback is not None:
+            after_fold_callback(fold, validation_value)
+
+    return values
