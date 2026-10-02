@@ -162,7 +162,7 @@ def train_model(
     train_criterion = get_criterion(task_type, use_logits, reduction="none" if weighted_loss else "mean")
     val_criterion = get_criterion(task_type, use_logits, reduction="none" if weighted_val_loss else "mean")
     scheduler = get_scheduler(optimizer, scheduler_name, **scheduler_kwargs or {})
-    tqdm_bar = tqdm(range(num_epochs), desc="Training Progress", unit="epoch", colour="blue")
+    tqdm_bar = tqdm(range(num_epochs), desc="Training Progress", unit=" epochs ", colour="blue")
     for epoch in tqdm_bar:
         train_loss = train_one_epoch(model, train_loader, train_criterion, optimizer, device, weighted_loss=weighted_loss)
         if val_loader is not None:
@@ -175,10 +175,10 @@ def train_model(
                 scheduler.step()
         if val_loader is not None:
             tqdm_bar.set_postfix({
-                "train_loss": train_loss,
-                "val_loss": val_loss
+                "train_loss": f"{train_loss:.4f}",
+                "val_loss": f"{val_loss:.4f}"
             })
         else:
             tqdm_bar.set_postfix({
-            "train_loss": train_loss,
+            "train_loss": f"{train_loss:.4f}",
         })
