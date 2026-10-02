@@ -156,5 +156,5 @@ def split_and_cv(by_group: str, filename_prefix: str, dataset: pd.DataFrame):
 
 if __name__ == "__main__":
     data = pd.read_csv("dataset/Antibiofilm data.csv", index_col=0)
-    split_and_cv("scaffold", "scaffold_split_", data)
-    split_and_cv("curated_smiles", "compound_split_", data)
+    split_and_cv("scaffold", "split_by_scaffold/scaffold_split_", data)
+    split_and_cv("curated_smiles", "split_by_compound/compound_split_", data)
