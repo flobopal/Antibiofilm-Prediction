@@ -95,6 +95,7 @@ def cross_validate(
         if after_fold_callback is not None:
             raise ValueError("max_rmse has no per-fold scores for after_fold_callback")
         oof_predictions = np.empty(len(dataset), dtype=np.float64)
+        oof_available = np.zeros(len(dataset), dtype=bool)
 
     raw_features = np.asarray(
         get_features_array(dataset, features_start, features_end),
@@ -195,8 +196,17 @@ def cross_validate(
                 y_pred = model(*(X.to(device) for X in X_test))
             if pooled_metric:
                 oof_predictions[val_idx] = y_pred.detach().cpu().numpy()
+                oof_available[val_idx] = True
                 if verbose:
-                    print(f"Fold {fold + 1}: collected {len(val_idx)} OOF predictions")
+                    cumulative_value = evaluate(
+                        "max_rmse", targets[oof_available],
+                        oof_predictions[oof_available],
+                        organisms=organisms[oof_available],
+                    )
+                    print(
+                        f"Fold {fold + 1} cumulative OOF max_rmse: "
+                        f"{cumulative_value:.4f}"
+                    )
                 continue
             validation_value = evaluate(
                 metrics, y_test, y_pred, sample_weight=weights

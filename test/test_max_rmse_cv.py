@@ -24,7 +24,7 @@ def dataset():
 
 @pytest.mark.parametrize('balance', [False, True])
 @pytest.mark.parametrize('include_features', [False, True])
-def test_cv_pools_predictions_before_scoring(dataset, monkeypatch, balance, include_features):
+def test_cv_pools_predictions_before_scoring(dataset, monkeypatch, capsys, balance, include_features):
     cv_module = importlib.import_module('script.tasks.cross_validate')
     monkeypatch.setattr(torch.cuda, 'is_available', lambda: False)
     trained_models = []
@@ -49,13 +49,16 @@ def test_cv_pools_predictions_before_scoring(dataset, monkeypatch, balance, incl
         dataset, lambda *dims: HeldOutModel(), features_start='prediction',
         output_column='y', organism_column='organism', metrics='max_rmse',
         optimizer_class=torch.optim.SGD, optimizer_kwargs={'lr': 0.01},
-        task_type='regression', normalize_features=False, verbose=False,
+        task_type='regression', normalize_features=False, verbose=True,
         balance_organism=balance, include_organism_features=include_features,
     )
     # A: pooled MSE=4/3, population variance=8/3; B: zero error.
     # Averaging the fold maxima would instead give (0 + 20) / 2 = 10.
     assert result == pytest.approx(np.sqrt(0.5))
     assert len(trained_models) == 2
+    output = capsys.readouterr().out
+    assert 'Fold 1 cumulative OOF max_rmse: 0.0000' in output
+    assert 'Fold 2 cumulative OOF max_rmse: 0.7071' in output
 
 
 class TinyObjective(FullModelObjective):
