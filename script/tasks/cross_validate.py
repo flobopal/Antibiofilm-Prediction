@@ -44,7 +44,6 @@ def cross_validate(
     normalizer_start: int | None = None,
     normalizer_end: int | None = None,
     use_logits: bool = True,
-    k_folds: int = 5,
     num_epochs: int = 50,
     scheduler_name: str = None,
     scheduler_kwargs: Optional[dict] = None,
