@@ -152,8 +152,6 @@ class FullModelObjective(Objective):
             }
         else:
             last_activation_params = None
-        num_heads = 2**trial.suggest_int("log2_num_heads", 0, 4)
-        pooling = trial.suggest_categorical("pooling", ['mean', 'max', 'linear'])
         dropout = trial.suggest_float('dropout', 0, 0.5)
         lr = trial.suggest_float('lr', 1e-5, 1e-2, log=True)
         num_epochs = 2**trial.suggest_int('epochs', 6, 10)
@@ -167,8 +165,6 @@ class FullModelObjective(Objective):
             embed_dim=embed_dim,
             hidden_dims=hidden_dims,
             activations=activations,
-            num_heads=num_heads,
-            pooling=pooling,
             dropout=dropout,
             lr=lr,
             num_epochs=num_epochs,
@@ -184,12 +180,10 @@ class FullModelObjective(Objective):
                 mol_input_dim=mol_input_dim,
                 org_input_dim=org_input_dim,
                 embed_dim=model_kwargs["embed_dim"],
-                num_heads=model_kwargs["num_heads"],
-                pooling=model_kwargs["pooling"],
                 dropout=model_kwargs["dropout"],
             )
             decoder_params = FeedForwardNetworkParams(
-                input_dims=mol_input_dim,
+                input_dims=model_kwargs["embed_dim"],
                 hidden_dims=model_kwargs["hidden_dims"],
                 activations=model_kwargs["activations"],
                 dropout=model_kwargs["dropout"],
