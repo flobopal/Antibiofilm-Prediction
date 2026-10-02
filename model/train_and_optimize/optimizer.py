@@ -263,34 +263,50 @@ class FeedForwardObjective(Objective):
         return _model_factory
 
 
-def do_study(Xd, Xp, y, name: str= "model_optimization", n_trials=50, database: str=None, objective=Objective):
-    """
-    Runs an Optuna hyperparameter optimization study for a given dataset and target.
+def do_study(
+        dataset: pd.DataFrame,
+        database: str,
+        name: str,
+        n_trials: int = 50,
+        objective=Objective,
+        features_start: int | str = 6,
+        features_end: int | str | None = None,
+        organism_column: str = "target_organism",
+        output_column: str = "pIC50",
+        normalize_features: bool = True,
+        normalizer_start: int | None = 768,
+        normalizer_end: int | None = None,
+        metric: str = "r2",
+        balance_organisms: bool = True,
+        include_organism_features: bool = True,
+        fold_column: str | None = None,
+        ):
 
-    Parameters:
-        Xd (array-like): Feature matrix for descriptors (e.g., embeddings or numerical features).
-        Xp (array-like): Feature matrix for additional properties or related features.
-        y (array-like): Target vector containing labels or values to predict.
-        name (str, optional): Name of the study and default SQLite database filename. Defaults to "model_optimization".
-        n_trials (int, optional): Number of optimization trials to run. Defaults to 50.
-        database (str, optional): URI of the database to store the study results. 
-                                  If None, a local SQLite file `{name}.db` is created and used.
+    direction = "maximize" if metric in ["r2"] else "minimize"
 
-    Returns:
-        optuna.study.Study: The completed Optuna study object containing optimization results.
-
-    Notes:
-        - The `Objective` class or callable must be defined elsewhere and accept `(Xd, Xp, y)` as input to create the Optuna objective function.
-        - If the specified database already exists, the study will be loaded and new trials appended.
-        - The SQLite database file will be created automatically if it does not exist.
-    """
-    if database is None:
-        database = f"sqlite:///{name}.db"
 
     study = optuna.create_study(
-        direction="maximize",
+        direction=direction,
         study_name=name,
         storage=database,
-        load_if_exists=True)
-    study.optimize(objective(Xd, Xp, y, 'r2'), n_trials=n_trials)
+        load_if_exists=True,
+    )
+
+    study.optimize(
+        objective(
+            dataset,
+            metric,
+            features_start,
+            output_column,
+            fold_column=fold_column,
+            organism_column=organism_column,
+            features_end=features_end,
+            normalize_features=normalize_features,
+            normalizer_start=normalizer_start,
+            normalizer_end=normalizer_end,
+            balance_organism=balance_organisms,
+            include_organism_features=include_organism_features
+        ),
+        n_trials=n_trials,
+    )
     return study
