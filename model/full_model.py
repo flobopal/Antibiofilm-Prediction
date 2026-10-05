@@ -1,5 +1,9 @@
+from typing import Optional
+
 from torch import nn
 import torch
+from script.utils.data_load import data_load
+from script.tasks.train import train_model as _train_model
 from model.interaction import MoleculeOrganismInteraction, MoleculeOrganismInteractionParams
 from model.decoder import FeedForwardNetwork, FeedForwardNetworkParams
 
@@ -64,3 +68,79 @@ class FullModel(nn.Module):
         return model
 
     
+def train_model(
+        data_path: str,
+        features_start: int | str = 0,
+        features_end: Optional[int | str] = None,
+        organism_encoder_path: Optional[str] = None,
+        organism_column: Optional[str | int] = None,
+        normalizer_path: Optional[str] = None,
+        normalizer_start: Optional[int] = None,
+        normalizer_end: Optional[int] = None,
+        output_column: Optional[int | str] = None,
+        train_test_column: Optional[str] = None,
+        train_test_value: Optional[str] = None,
+        embed_dim: int = 2**4,
+        hidden_dims: list[int] =[2**5, 2**9],
+        activations: list[str] = ["tanh", "tanh", "leaky_relu"],
+        num_heads: int = 2**2,
+        pooling: str = "max",
+        dropout: float = 0.0311,
+        lr: float = 9.27e-5,
+        num_epochs: int = 2**8,
+        batch_size: int = 64,
+        scheduler_name: Optional[str] = None,
+        scheduler_kwargs: Optional[dict] = None,
+        last_activation_params: Optional[dict] = None,
+        save_path: Optional[str] = None,
+        verbose: bool = True
+) -> FullModel:
+    Xd, Xp, y = data_load(
+        data_path,
+        features_start=features_start,
+        features_end=features_end,
+        organism_encoder_path=organism_encoder_path,
+        organism_column=organism_column,
+        normalizer_path=normalizer_path,
+        normalizer_start=normalizer_start,
+        normalizer_end=normalizer_end,
+        output_column=output_column,
+        train_test_column=train_test_column,
+        train_test_value=train_test_value
+    )
+    train_loader = torch.utils.data.DataLoader(
+        torch.utils.data.TensorDataset(Xd, Xp, y),
+        batch_size=batch_size,
+        shuffle=True
+    )
+    model = FullModel(
+        mo_params=MoleculeOrganismInteractionParams(
+            mol_input_dim=Xd.shape[1],
+            org_input_dim=Xp.shape[1],
+            embed_dim=embed_dim,
+            num_heads=num_heads,
+            pooling=pooling,
+            dropout=dropout
+        ),
+        ff_params=FeedForwardNetworkParams(
+            input_dims=embed_dim,
+            hidden_dims=hidden_dims,
+            activations=activations,
+            dropout=dropout
+        )
+    )
+    _train_model(
+        model=model,
+        train_loader=train_loader,
+        task_type='regression',
+        optimizer=torch.optim.Adam(model.parameters(), lr=lr),
+        num_epochs=num_epochs,
+        scheduler_name=scheduler_name,
+        scheduler_kwargs=scheduler_kwargs,
+        verbose=verbose
+    )
+
+    if save_path is not None:
+        model.save(save_path)
+
+    return model
