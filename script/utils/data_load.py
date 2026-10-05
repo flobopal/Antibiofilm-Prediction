@@ -67,13 +67,14 @@ def data_load(
     embeddings_array = get_features_array(data, features_start, features_end)
     if normalizer_path is not None:
         embeddings_array= normalize(embeddings_array, normalizer_path, normalizer_start, normalizer_end)
-    embeddings_tensor = torch.from_numpy(embeddings_array).float()
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    embeddings_tensor = torch.from_numpy(embeddings_array).float().to(device)
     organism_tensor = None
     if organism_column is not None:
         organism_array = encode_organism(data[organism_column], organism_encoder_path)
-        organism_tensor = torch.from_numpy(organism_array).float()
+        organism_tensor = torch.from_numpy(organism_array).float().to(device)
     output_array = None if output_column is None else data[output_column].to_numpy(copy=True)
-    output_tensor = torch.from_numpy(output_array).float() if output_array is not None else None
+    output_tensor = torch.from_numpy(output_array).float().to(device) if output_array is not None else None
     return embeddings_tensor, organism_tensor, output_tensor
 
 def train_test_split(df: pd.DataFrame, column_name: str, value: str) -> pd.DataFrame:
