@@ -130,13 +130,13 @@ class Objective:
 class FullModelObjective(Objective):
 
     def suggest_params(self, trial: optuna.Trial) -> dict:
-        embed_dim = 2**trial.suggest_int("log2_embed_size", 2,7)
-        num_layers = trial.suggest_int("num_layers", 1, 4)
+        embed_dim = 2**trial.suggest_int("log2_embed_size", 2,12)
+        num_layers = trial.suggest_int("num_layers", 1, 6)
         hidden_dims = []
         activations = []
         for layer_index in range(num_layers):
             hidden_dims.append(
-                2**trial.suggest_int(f"log2_layer_{layer_index}", 2, 10)
+                2**trial.suggest_int(f"log2_layer_{layer_index}", 2, 12)
             )
             activations.append(
                 trial.suggest_categorical(
