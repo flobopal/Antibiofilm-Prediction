@@ -201,12 +201,12 @@ class FullModelObjective(Objective):
 class FeedForwardObjective(Objective):
     
     def suggest_params(self, trial: optuna.Trial) -> dict:
-        num_layers = trial.suggest_int("num_layers", 1, 5)
+        num_layers = trial.suggest_int("num_layers", 1, 8)
         hidden_dims = []
         activations = []
         for layer_index in range(num_layers):
             hidden_dims.append(
-                2**trial.suggest_int(f"log2_layer_{layer_index}", 2, 12)
+                2**trial.suggest_int(f"log2_layer_{layer_index}", 2, 14)
             )
             activations.append(
                 trial.suggest_categorical(
