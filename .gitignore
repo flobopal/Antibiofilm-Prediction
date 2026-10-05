@@ -7,3 +7,5 @@ private_data
 .DS_Store
 *.tfevents.*
 experiments_old
+*.pkl
+*.pth
