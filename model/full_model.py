@@ -83,8 +83,6 @@ def train_model(
         embed_dim: int = 2**4,
         hidden_dims: list[int] =[2**5, 2**9],
         activations: list[str] = ["tanh", "tanh", "leaky_relu"],
-        num_heads: int = 2**2,
-        pooling: str = "max",
         dropout: float = 0.0311,
         lr: float = 9.27e-5,
         num_epochs: int = 2**8,
@@ -118,8 +116,6 @@ def train_model(
             mol_input_dim=Xd.shape[1],
             org_input_dim=Xp.shape[1],
             embed_dim=embed_dim,
-            num_heads=num_heads,
-            pooling=pooling,
             dropout=dropout
         ),
         ff_params=FeedForwardNetworkParams(
@@ -137,7 +133,6 @@ def train_model(
         num_epochs=num_epochs,
         scheduler_name=scheduler_name,
         scheduler_kwargs=scheduler_kwargs,
-        verbose=verbose
     )
 
     if save_path is not None:
