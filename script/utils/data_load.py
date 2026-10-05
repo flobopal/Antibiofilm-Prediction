@@ -72,7 +72,7 @@ def data_load(
     if organism_column is not None:
         organism_array = encode_organism(data[organism_column], organism_encoder_path)
         organism_tensor = torch.from_numpy(organism_array).float()
-    output_array = None if output_column is None else data[output_column].values
+    output_array = None if output_column is None else data[output_column].to_numpy(copy=True)
     output_tensor = torch.from_numpy(output_array).float() if output_array is not None else None
     return embeddings_tensor, organism_tensor, output_tensor
 
