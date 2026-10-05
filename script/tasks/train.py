@@ -146,9 +146,9 @@ def get_criterion(
 def train_model(
     model: nn.Module,
     train_loader: DataLoader,
-    val_loader: Optional[DataLoader],
     optimizer: torch.optim.Optimizer,
     task_type: Literal['regression', 'binary', 'multiclass'],
+    val_loader: Optional[DataLoader] = None,
     use_logits: bool = True,
     num_epochs: int = 50,
     scheduler_name: Optional[str] = None,
