@@ -1,4 +1,5 @@
 from typing import List, Optional, Self, Union
+import torch
 import torch.nn as nn
 from script.utils.activation_functions import get_activation
 from dataclasses import dataclass, asdict
@@ -93,5 +94,7 @@ class FeedForwardNetwork(nn.Module):
                 last_activation_params=params.last_activation_params
         )
 
-    def forward(self, x):
+    def forward(self, x, x2 = None):
+        if x2 is not None:
+            x = torch.cat((x, x2), 1)
         return self.model(x).squeeze(-1)
