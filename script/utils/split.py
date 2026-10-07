@@ -128,10 +128,10 @@ def split_and_cv(by_group: str, filename_prefix: str, dataset: pd.DataFrame):
             dataset,
             by_group,
             ["target_organism","binact"],
-            [5,1],
+            [10,20],
             1,
             n_attempts=100_000,
-            n_out=5)):
+            n_out=10)):
         new_data = dataset.copy()
         columns = new_data.columns.to_list()
         columns.insert(columns.index("train")+1, "kfold")
