@@ -77,6 +77,7 @@ class FeedForwardNetwork(nn.Module):
         layers.append(nn.Linear(dim, 1))
 
         self.model = nn.Sequential(*layers)
+        self.params = FeedForwardNetwork(input_dim, layer_dims, activations, dropout, last_activation_params)
 
     @classmethod
     def from_params(cls, params: FeedForwardNetworkParams) -> Self:
@@ -101,6 +102,22 @@ class FeedForwardNetwork(nn.Module):
         if x2 is not None:
             x = torch.cat((x, x2), 1)
         return self.model(x).squeeze(-1)
+
+    def save(self, path: str):
+        torch.save({
+            "model_state_dict": self.state_dict(),
+            "params": self.params,
+        }, path)
+
+    @classmethod
+    def load(cls, path: str) -> Self:
+        checkpoint = torch.load(path, weights_only=True)
+        params = FeedForwardNetworkParams.fromdict(checkpoint["params"])
+
+        model = cls.from_params(params)
+        model.load_state_dict(checkpoint["model_state_dict"])
+        return model
+
 
 def train_mlp(
         data_path: str,
