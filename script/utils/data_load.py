@@ -65,7 +65,7 @@ def data_load(
     if train_test_column is not None:
         data = train_test_split(data, train_test_column, train_test_value)
     if organism_filter is not None:
-        data = data[data[organism_column.eq(organism_filter)]].copy()
+        data = data[data[organism_column].eq(organism_filter)].copy()
 
     embeddings_array = get_features_array(data, features_start, features_end)
     if normalizer_path is not None:
@@ -73,7 +73,7 @@ def data_load(
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     embeddings_tensor = torch.from_numpy(embeddings_array).float().to(device)
     organism_tensor = None
-    if organism_column is not None:
+    if organism_column is not None and organism_filter is None:
         organism_array = encode_organism(data[organism_column], organism_encoder_path)
         organism_tensor = torch.from_numpy(organism_array).float().to(device)
     output_array = None if output_column is None else data[output_column].to_numpy(copy=True)
