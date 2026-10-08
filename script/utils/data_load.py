@@ -14,6 +14,7 @@ def data_load(
         features_end: Optional[int | str] = None,
         organism_encoder_path: Optional[str] = None,
         organism_column: Optional[str | int] = None,
+        organism_filter: Optional[str] = None,
         normalizer_path: Optional[str] = None,
         normalizer_start: Optional[int] = None,
         normalizer_end: Optional[int] = None,
@@ -63,6 +64,8 @@ def data_load(
     data = pd.read_csv(data_path)
     if train_test_column is not None:
         data = train_test_split(data, train_test_column, train_test_value)
+    if organism_filter is not None:
+        data = data[data[organism_column.eq(organism_filter)]].copy()
 
     embeddings_array = get_features_array(data, features_start, features_end)
     if normalizer_path is not None:
