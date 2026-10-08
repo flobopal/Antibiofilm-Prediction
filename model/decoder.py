@@ -77,7 +77,7 @@ class FeedForwardNetwork(nn.Module):
         layers.append(nn.Linear(dim, 1))
 
         self.model = nn.Sequential(*layers)
-        self.params = FeedForwardNetwork(input_dim, layer_dims, activations, dropout, last_activation_params)
+        self.params = FeedForwardNetworkParams(input_dim, layer_dims, activations, dropout, last_activation_params)
 
     @classmethod
     def from_params(cls, params: FeedForwardNetworkParams) -> Self:
