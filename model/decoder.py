@@ -140,7 +140,6 @@ def train_mlp(
         train_test_column=train_test_column,
         train_test_value=train_test_value
     )
-    print(Xd, ".........", Xp, ".........", y, sep='\n')
 
     input_dim = Xd.shape[1]
     if Xp is None:
