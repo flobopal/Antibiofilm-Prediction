@@ -75,7 +75,7 @@ class FeedForwardNetwork(nn.Module):
         layers.append(get_activation(activations[-1], last_activation_params))
         layers.append(nn.Dropout(dropout))
         layers.append(last_layer:=nn.Linear(dim, 1))
-        nn.init.normal_(last_layer.bias.data, mean=6.0, std=1.0)
+        nn.init.constant_(last_layer.bias, 6.0)
 
         self.model = nn.Sequential(*layers)
         self.params = FeedForwardNetworkParams(input_dim, layer_dims, activations, dropout, last_activation_params)
