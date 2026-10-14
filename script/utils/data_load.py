@@ -1,6 +1,6 @@
 import os
 import sys
-from typing import Optional
+from typing import Iterable, Optional
 import numpy as np
 import pandas as pd
 import joblib
@@ -9,7 +9,7 @@ import torch
 
 def data_load(
               
-        data_path: str,
+        data_path: str | pd.DataFrame,
         features_start: int | str = 0,
         features_end: Optional[int | str] = None,
         organism_encoder_path: Optional[str] = None,
@@ -61,7 +61,10 @@ def data_load(
             train_test_value="train"
         )
     """
-    data = pd.read_csv(data_path)
+    if isinstance(data_path, pd.DataFrame):
+        data = data_path
+    else:
+        data = pd.read_csv(data_path)
     if train_test_column is not None:
         data = train_test_split(data, train_test_column, train_test_value)
     if organism_filter is not None:
