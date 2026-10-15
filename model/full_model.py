@@ -1,8 +1,11 @@
 from typing import Optional
 
+import pandas as pd
 from torch import nn
 import torch
 from script.utils.data_load import data_load
+from script.utils.organisms import get_organisms_column
+from script.utils.weights import organism_loss_weights
 from script.tasks.train import train_model as _train_model
 from model.interaction import MoleculeOrganismInteraction, MoleculeOrganismInteractionParams
 from model.decoder import FeedForwardNetwork, FeedForwardNetworkParams
@@ -91,9 +94,10 @@ def train_model(
         scheduler_kwargs: Optional[dict] = None,
         last_activation_params: Optional[dict] = None,
         save_path: Optional[str] = None,
+        weighted_loss: bool = False,
         verbose: bool = True
 ) -> FullModel:
-    Xd, Xp, y = data_load(
+    tensors = Xd, Xp, y = data_load(
         data_path,
         features_start=features_start,
         features_end=features_end,
@@ -106,8 +110,12 @@ def train_model(
         train_test_column=train_test_column,
         train_test_value=train_test_value
     )
+    if weighted_loss:
+        organisms = get_organisms_column(data_path, organism_column, None, train_test_column, train_test_value)
+        weights = organism_loss_weights(organisms)
+        tensors += (weights,)
     train_loader = torch.utils.data.DataLoader(
-        torch.utils.data.TensorDataset(Xd, Xp, y),
+        torch.utils.data.TensorDataset(*tensors),
         batch_size=batch_size,
         shuffle=True
     )
@@ -122,7 +130,8 @@ def train_model(
             input_dims=embed_dim,
             hidden_dims=hidden_dims,
             activations=activations,
-            dropout=dropout
+            dropout=dropout,
+            last_activation_params=last_activation_params
         )
     )
     _train_model(
@@ -133,6 +142,7 @@ def train_model(
         num_epochs=num_epochs,
         scheduler_name=scheduler_name,
         scheduler_kwargs=scheduler_kwargs,
+        weighted_loss=weighted_loss,
     )
 
     if save_path is not None:

@@ -2,6 +2,7 @@ from sklearn.metrics import r2_score
 import torch
 import numpy
 import pandas as pd
+from script.utils.weights import organism_loss_weights
 
 
 def max_rmse(y_true, y_pred, organisms) -> float:
@@ -38,6 +39,50 @@ metrics_dict = {
 
 def list_metrics():
     return list(metrics_dict.keys())
+
+def organisms_sigma(y_true: numpy.ndarray, organisms: numpy.ndarray):
+    sigma = numpy.zeros_like(y_true)
+    for organism in numpy.unique(organisms):
+        indexes = numpy.where(organisms == organism)
+        sigma[indexes] = max(y_true[indexes].std(), 0.1)
+    return sigma
+
+def psmae(y_true, y_pred, organisms, sample_weight = None) -> float:
+    y_true = numpy.asarray(to_cpu(y_true), dtype=numpy.float64)
+    y_pred = numpy.asarray(to_cpu(y_pred), dtype=numpy.float64)
+    organisms = numpy.asarray(to_cpu(organisms))
+    if any(array.ndim != 1 for array in (y_true, y_pred, organisms)):
+        raise ValueError("psmae expects one-dimensional targets, predictions and organisms")
+    if not (len(y_true) == len(y_pred) == len(organisms)) or len(y_true) == 0:
+        raise ValueError("psmae requires nonempty arrays of equal length")
+    if not numpy.isfinite(y_true).all() or not numpy.isfinite(y_pred).all():
+        raise ValueError("psmae requires finite targets and predictions")
+    if pd.isna(organisms).any():
+        raise ValueError("psmae requires nonmissing organism labels")
+    if sample_weight is None:
+        sample_weight = numpy.ones_like(y_true)
+    sample_weight = numpy.asarray(to_cpu(sample_weight)) 
+    sigma = organisms_sigma(y_true, organisms)
+    return numpy.mean(numpy.abs(y_true-y_pred)*sample_weight/sigma)
+    
+def psmse(y_true, y_pred, organisms, sample_weight = None) -> float:
+    y_true = numpy.asarray(to_cpu(y_true), dtype=numpy.float64)
+    y_pred = numpy.asarray(to_cpu(y_pred), dtype=numpy.float64)
+    organisms = numpy.asarray(to_cpu(organisms))
+    if any(array.ndim != 1 for array in (y_true, y_pred, organisms)):
+        raise ValueError("psmse expects one-dimensional targets, predictions and organisms")
+    if not (len(y_true) == len(y_pred) == len(organisms)) or len(y_true) == 0:
+        raise ValueError("psmse requires nonempty arrays of equal length")
+    if not numpy.isfinite(y_true).all() or not numpy.isfinite(y_pred).all():
+        raise ValueError("psmse requires finite targets and predictions")
+    if pd.isna(organisms).any():
+        raise ValueError("psmse requires nonmissing organism labels")
+    if sample_weight is None:
+        sample_weight = numpy.ones_like(y_true)
+    sample_weight = numpy.asarray(to_cpu(sample_weight)) 
+    sigma = organisms_sigma(y_true, organisms)
+    return numpy.mean(((y_true-y_pred)**2)*sample_weight/sigma)
+    
 
 def to_cpu(array: numpy.ndarray | torch.Tensor) -> numpy.ndarray:
     if isinstance(array, torch.Tensor):

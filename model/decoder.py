@@ -5,6 +5,8 @@ from script.utils.activation_functions import get_activation
 from dataclasses import dataclass, asdict
 
 from script.utils.data_load import data_load
+from script.utils.organisms import get_organisms_column
+from script.utils.weights import organism_loss_weights
 from script.tasks.train import train_model
 
 @dataclass
@@ -127,6 +129,7 @@ def train_mlp(
         organism_encoder_path: Optional[str] = None,
         organism_column: Optional[str | int] = None,
         organism_filter: Optional[str] = None,
+        use_organisms_features: bool = True,
         normalizer_path: Optional[str] = None,
         normalizer_start: Optional[int] = None,
         normalizer_end: Optional[int] = None,
@@ -142,8 +145,11 @@ def train_mlp(
         scheduler_name: Optional[str] = None,
         scheduler_kwargs: Optional[dict] = None,
         last_activation_params: Optional[dict] = None,
-        save_path: Optional[str] = None
+        save_path: Optional[str] = None,
+        weighted_loss: bool = False,
+        weighted_val_loss: bool = False
 ) -> FeedForwardNetwork:
+    
     Xd, Xp, y = data_load(
         data_path,
         features_start=features_start,
@@ -156,15 +162,19 @@ def train_mlp(
         normalizer_end=normalizer_end,
         output_column=output_column,
         train_test_column=train_test_column,
-        train_test_value=train_test_value
+        train_test_value=train_test_value,
     )
 
     input_dim = Xd.shape[1]
-    if Xp is None:
+    if Xp is None or not use_organisms_features:
         tensors = (Xd, y)
     else:
         tensors = (Xd, Xp, y)
         input_dim += Xp.shape[1]
+    if weighted_loss:
+        organisms = get_organisms_column(data_path, organism_column, organism_filter, train_test_column, train_test_value)
+        weights = organism_loss_weights(organisms)
+        tensors += (weights,)
     train_loader = torch.utils.data.DataLoader(
         torch.utils.data.TensorDataset(*tensors),
         batch_size=batch_size,
@@ -185,6 +195,8 @@ def train_mlp(
         num_epochs=num_epochs,
         scheduler_name=scheduler_name,
         scheduler_kwargs=scheduler_kwargs,
+        weighted_loss=weighted_loss,
+        weighted_val_loss=weighted_val_loss
     )
 
     if save_path is not None:
