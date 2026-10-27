@@ -11,7 +11,7 @@ ACTIVATIONS = {
     "identity": nn.Identity,
 }
 
-def get_activation(name : str, params: Optional[dict] = None) -> Callable:
+def get_activation(name : str|nn.Module, params: Optional[dict] = None) -> Callable:
     """
     Retrieves an activation function by name.
     Args:
@@ -21,6 +21,8 @@ def get_activation(name : str, params: Optional[dict] = None) -> Callable:
     Raises:
         ValueError: If the specified activation function name is not recognized.
     """
+    if isinstance(name, nn.Module):
+        return name
     params = params or {}
     if name not in ACTIVATIONS:
         raise ValueError(f"Activation '{name}' not recognized")
