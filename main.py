@@ -43,11 +43,11 @@ def parse_prediction(args: argparse.Namespace):
 
     model = FullModel.load(args.model_checkpoint_path)
     Xd, Xp, _ = parse_data(args)
-    model.eval()
+    model = model.to(Xd.device).eval()
     with torch.no_grad():
         y_pred = model.forward(Xd, Xp)
     df = pd.read_csv(args.input).iloc[:,:args.features_start].copy()
-    df['prediction'] = y_pred
+    df['prediction'] = y_pred.detach().cpu().numpy()
     df.to_csv(args.output, index=False)
     
 
@@ -60,6 +60,8 @@ parser = argparse.ArgumentParser(
 )
 
 subparsers = parser.add_subparsers(
+    dest="command",
+    required=True,
     help="Commands"
 )
 
@@ -192,7 +194,7 @@ predict_parser.add_argument(
 predict_parser.add_argument(
     "--normalizer_end",
     type=int,
-    default=2000,
+    default=900,
     help="Index of the fist feature that does not need to be normalized"
 )
 
@@ -215,6 +217,6 @@ predict_parser.add_argument(
     help="path to the model checkpoint"
 )
 
-args = parser.parse_args()
-
-args.func(args)
+if __name__ == "__main__":
+    args = parser.parse_args()
+    args.func(args)
