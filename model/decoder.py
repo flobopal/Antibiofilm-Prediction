@@ -187,6 +187,7 @@ def train_mlp(
         dropout=dropout,
         last_activation_params=last_activation_params
     )
+    model = model.to(Xd.device)
     train_model(
         model=model,
         train_loader=train_loader,

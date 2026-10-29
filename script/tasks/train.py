@@ -156,8 +156,8 @@ def train_model(
     weighted_loss: bool = False,
     weighted_val_loss: bool = False,
 ):
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model = model.to(device)
+    """Train on the model's device; move it there before creating the optimizer."""
+    device = next(model.parameters()).device
 
     train_criterion = get_criterion(task_type, use_logits, reduction="none" if weighted_loss else "mean")
     val_criterion = get_criterion(task_type, use_logits, reduction="none" if weighted_val_loss else "mean")

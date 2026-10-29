@@ -170,6 +170,7 @@ def cross_validate(
             val_dataset, batch_size=batch_size, shuffle=False
         )
         
+        model = model.to(device)
         optimizer = optimizer_class(model.parameters(), **optimizer_kwargs)
         train_model(
             model=model,

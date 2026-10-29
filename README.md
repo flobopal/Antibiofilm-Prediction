@@ -233,6 +233,8 @@ model = train_model(
 
 `BEST_PARAMS` specifies a 1024-dimensional interaction representation, decoder widths `[32, 16, 8]`, batch size 64, 1024 epochs, Adam, a cosine learning-rate schedule, and organism-weighted MSE. Each observation receives weight `N / (K * count[organism])`, giving each species equal total weight within the supplied training rows.
 
+The full-model and MLP training helpers, as well as cross-validation, move the model to the selected device before creating the optimizer. If calling the lower-level `script.tasks.train.train_model` directly, move the model first, then construct the optimizer. That loop uses the model's existing device and transfers each batch to it.
+
 The standalone entry point is:
 
 ```bash
@@ -311,10 +313,10 @@ The optimization script requests 1000 trials. The evaluation script trains acros
 
 ## Tests and reproducibility
 
-Run the focused tests for the CLI, current metrics, and cross-validation objective:
+Run the focused tests for the CLI, training device placement, current metrics, and cross-validation objective:
 
 ```bash
-python -m pytest test/test_cli.py test/test_metrics.py test/test_max_rmse_cv.py -q
+python -m pytest test/test_cli.py test/test_training_device.py test/test_metrics.py test/test_max_rmse_cv.py -q
 ```
 
 The complete suite can be invoked with `python -m pytest test -q`, but some older tests still import the removed `Trainer` and `cross_validate_model` APIs or use outdated function arguments. In particular, `test/test_interaction.py` still passes attention parameters such as `num_heads` that the FiLM module no longer accepts.

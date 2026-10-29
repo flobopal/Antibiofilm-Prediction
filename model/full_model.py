@@ -62,7 +62,8 @@ class FullModel(nn.Module):
     
     @classmethod
     def load(cls, path: str):
-        checkpoint = torch.load(path, weights_only=True)
+        """Load on CPU regardless of the device used to save the checkpoint."""
+        checkpoint = torch.load(path, map_location="cpu", weights_only=True)
         mo_params = MoleculeOrganismInteractionParams.fromdict(checkpoint["mo_params"])
         ff_params = FeedForwardNetworkParams.fromdict(checkpoint["ff_params"])
 
@@ -134,6 +135,7 @@ def train_model(
             last_activation_params=last_activation_params
         )
     )
+    model = model.to(Xd.device)
     _train_model(
         model=model,
         train_loader=train_loader,
