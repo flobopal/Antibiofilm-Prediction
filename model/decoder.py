@@ -1,7 +1,13 @@
 from typing import List, Optional, Self, Union
+import torch
 import torch.nn as nn
 from script.utils.activation_functions import get_activation
 from dataclasses import dataclass, asdict
+
+from script.utils.data_load import data_load
+from script.utils.organisms import get_organisms_column
+from script.utils.weights import organism_loss_weights
+from script.tasks.train import train_model
 
 @dataclass
 class FeedForwardNetworkParams:
@@ -70,9 +76,11 @@ class FeedForwardNetwork(nn.Module):
         #Add output layer
         layers.append(get_activation(activations[-1], last_activation_params))
         layers.append(nn.Dropout(dropout))
-        layers.append(nn.Linear(dim, 1))
+        layers.append(last_layer:=nn.Linear(dim, 1))
+        nn.init.constant_(last_layer.bias, 6.0)
 
         self.model = nn.Sequential(*layers)
+        self.params = FeedForwardNetworkParams(input_dim, layer_dims, activations, dropout, last_activation_params)
 
     @classmethod
     def from_params(cls, params: FeedForwardNetworkParams) -> Self:
@@ -93,5 +101,106 @@ class FeedForwardNetwork(nn.Module):
                 last_activation_params=params.last_activation_params
         )
 
-    def forward(self, x):
+    def forward(self, x, x2 = None):
+        if x2 is not None:
+            x = torch.cat((x, x2), 1)
         return self.model(x).squeeze(-1)
+
+    def save(self, path: str):
+        torch.save({
+            "model_state_dict": self.state_dict(),
+            "params": self.params,
+        }, path)
+
+    @classmethod
+    def load(cls, path: str) -> Self:
+        checkpoint = torch.load(path, weights_only=True)
+        params = FeedForwardNetworkParams.fromdict(checkpoint["params"])
+
+        model = cls.from_params(params)
+        model.load_state_dict(checkpoint["model_state_dict"])
+        return model
+
+
+def train_mlp(
+        data_path: str,
+        features_start: int | str = 0,
+        features_end: Optional[int | str] = None,
+        organism_encoder_path: Optional[str] = None,
+        organism_column: Optional[str | int] = None,
+        organism_filter: Optional[str] = None,
+        use_organisms_features: bool = True,
+        normalizer_path: Optional[str] = None,
+        normalizer_start: Optional[int] = None,
+        normalizer_end: Optional[int] = None,
+        output_column: Optional[int | str] = None,
+        train_test_column: Optional[str] = None,
+        train_test_value: Optional[str] = None,
+        hidden_dims: list[int] =[2**6],
+        activations: list[str] = ["relu", "relu"],
+        dropout: float = 0.5,
+        lr: float = 1e-5,
+        num_epochs: int = 2**8,
+        batch_size: int = 64,
+        scheduler_name: Optional[str] = None,
+        scheduler_kwargs: Optional[dict] = None,
+        last_activation_params: Optional[dict] = None,
+        save_path: Optional[str] = None,
+        weighted_loss: bool = False,
+        weighted_val_loss: bool = False
+) -> FeedForwardNetwork:
+    
+    Xd, Xp, y = data_load(
+        data_path,
+        features_start=features_start,
+        features_end=features_end,
+        organism_encoder_path=organism_encoder_path,
+        organism_column=organism_column,
+        organism_filter=organism_filter,
+        normalizer_path=normalizer_path,
+        normalizer_start=normalizer_start,
+        normalizer_end=normalizer_end,
+        output_column=output_column,
+        train_test_column=train_test_column,
+        train_test_value=train_test_value,
+    )
+
+    input_dim = Xd.shape[1]
+    if Xp is None or not use_organisms_features:
+        tensors = (Xd, y)
+    else:
+        tensors = (Xd, Xp, y)
+        input_dim += Xp.shape[1]
+    if weighted_loss:
+        organisms = get_organisms_column(data_path, organism_column, organism_filter, train_test_column, train_test_value)
+        weights = organism_loss_weights(organisms)
+        tensors += (weights,)
+    train_loader = torch.utils.data.DataLoader(
+        torch.utils.data.TensorDataset(*tensors),
+        batch_size=batch_size,
+        shuffle=True
+    )
+    model = FeedForwardNetwork(
+        input_dim=input_dim,
+        layer_dims=hidden_dims,
+        activations=activations,
+        dropout=dropout,
+        last_activation_params=last_activation_params
+    )
+    model = model.to(Xd.device)
+    train_model(
+        model=model,
+        train_loader=train_loader,
+        task_type='regression',
+        optimizer=torch.optim.Adam(model.parameters(), lr=lr),
+        num_epochs=num_epochs,
+        scheduler_name=scheduler_name,
+        scheduler_kwargs=scheduler_kwargs,
+        weighted_loss=weighted_loss,
+        weighted_val_loss=weighted_val_loss
+    )
+
+    if save_path is not None:
+        model.save(save_path)
+
+    return model

@@ -1,5 +1,12 @@
+from typing import Optional
+
+import pandas as pd
 from torch import nn
 import torch
+from script.utils.data_load import data_load
+from script.utils.organisms import get_organisms_column
+from script.utils.weights import organism_loss_weights
+from script.tasks.train import train_model as _train_model
 from model.interaction import MoleculeOrganismInteraction, MoleculeOrganismInteractionParams
 from model.decoder import FeedForwardNetwork, FeedForwardNetworkParams
 
@@ -55,7 +62,8 @@ class FullModel(nn.Module):
     
     @classmethod
     def load(cls, path: str):
-        checkpoint = torch.load(path, weights_only=True)
+        """Load on CPU regardless of the device used to save the checkpoint."""
+        checkpoint = torch.load(path, map_location="cpu", weights_only=True)
         mo_params = MoleculeOrganismInteractionParams.fromdict(checkpoint["mo_params"])
         ff_params = FeedForwardNetworkParams.fromdict(checkpoint["ff_params"])
 
@@ -64,3 +72,82 @@ class FullModel(nn.Module):
         return model
 
     
+def train_model(
+        data_path: str,
+        features_start: int | str = 0,
+        features_end: Optional[int | str] = None,
+        organism_encoder_path: Optional[str] = None,
+        organism_column: Optional[str | int] = None,
+        normalizer_path: Optional[str] = None,
+        normalizer_start: Optional[int] = None,
+        normalizer_end: Optional[int] = None,
+        output_column: Optional[int | str] = None,
+        train_test_column: Optional[str] = None,
+        train_test_value: Optional[str] = None,
+        embed_dim: int = 2**4,
+        hidden_dims: list[int] =[2**5, 2**9],
+        activations: list[str] = ["tanh", "tanh", "leaky_relu"],
+        dropout: float = 0.0311,
+        lr: float = 9.27e-5,
+        num_epochs: int = 2**8,
+        batch_size: int = 64,
+        scheduler_name: Optional[str] = None,
+        scheduler_kwargs: Optional[dict] = None,
+        last_activation_params: Optional[dict] = None,
+        save_path: Optional[str] = None,
+        weighted_loss: bool = False,
+        verbose: bool = True
+) -> FullModel:
+    tensors = Xd, Xp, y = data_load(
+        data_path,
+        features_start=features_start,
+        features_end=features_end,
+        organism_encoder_path=organism_encoder_path,
+        organism_column=organism_column,
+        normalizer_path=normalizer_path,
+        normalizer_start=normalizer_start,
+        normalizer_end=normalizer_end,
+        output_column=output_column,
+        train_test_column=train_test_column,
+        train_test_value=train_test_value
+    )
+    if weighted_loss:
+        organisms = get_organisms_column(data_path, organism_column, None, train_test_column, train_test_value)
+        weights = organism_loss_weights(organisms)
+        tensors += (weights,)
+    train_loader = torch.utils.data.DataLoader(
+        torch.utils.data.TensorDataset(*tensors),
+        batch_size=batch_size,
+        shuffle=True
+    )
+    model = FullModel(
+        mo_params=MoleculeOrganismInteractionParams(
+            mol_input_dim=Xd.shape[1],
+            org_input_dim=Xp.shape[1],
+            embed_dim=embed_dim,
+            dropout=dropout
+        ),
+        ff_params=FeedForwardNetworkParams(
+            input_dims=embed_dim,
+            hidden_dims=hidden_dims,
+            activations=activations,
+            dropout=dropout,
+            last_activation_params=last_activation_params
+        )
+    )
+    model = model.to(Xd.device)
+    _train_model(
+        model=model,
+        train_loader=train_loader,
+        task_type='regression',
+        optimizer=torch.optim.Adam(model.parameters(), lr=lr),
+        num_epochs=num_epochs,
+        scheduler_name=scheduler_name,
+        scheduler_kwargs=scheduler_kwargs,
+        weighted_loss=weighted_loss,
+    )
+
+    if save_path is not None:
+        model.save(save_path)
+
+    return model

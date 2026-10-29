@@ -1,6 +1,6 @@
 import os
 import sys
-from typing import Optional
+from typing import Iterable, Optional
 import numpy as np
 import pandas as pd
 import joblib
@@ -9,11 +9,12 @@ import torch
 
 def data_load(
               
-        data_path: str,
+        data_path: str | pd.DataFrame,
         features_start: int | str = 0,
         features_end: Optional[int | str] = None,
         organism_encoder_path: Optional[str] = None,
         organism_column: Optional[str | int] = None,
+        organism_filter: Optional[str] = None,
         normalizer_path: Optional[str] = None,
         normalizer_start: Optional[int] = None,
         normalizer_end: Optional[int] = None,
@@ -60,20 +61,26 @@ def data_load(
             train_test_value="train"
         )
     """
-    data = pd.read_csv(data_path)
+    if isinstance(data_path, pd.DataFrame):
+        data = data_path
+    else:
+        data = pd.read_csv(data_path)
     if train_test_column is not None:
         data = train_test_split(data, train_test_column, train_test_value)
+    if organism_filter is not None:
+        data = data[data[organism_column].eq(organism_filter)].copy()
 
     embeddings_array = get_features_array(data, features_start, features_end)
     if normalizer_path is not None:
         embeddings_array= normalize(embeddings_array, normalizer_path, normalizer_start, normalizer_end)
-    embeddings_tensor = torch.from_numpy(embeddings_array).float()
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    embeddings_tensor = torch.from_numpy(embeddings_array).float().to(device)
     organism_tensor = None
-    if organism_column is not None:
+    if organism_column is not None and organism_filter is None:
         organism_array = encode_organism(data[organism_column], organism_encoder_path)
-        organism_tensor = torch.from_numpy(organism_array).float()
-    output_array = None if output_column is None else data[output_column].values
-    output_tensor = torch.from_numpy(output_array).float() if output_array is not None else None
+        organism_tensor = torch.from_numpy(organism_array).float().to(device)
+    output_array = None if output_column is None else data[output_column].to_numpy(copy=True)
+    output_tensor = torch.from_numpy(output_array).float().to(device) if output_array is not None else None
     return embeddings_tensor, organism_tensor, output_tensor
 
 def train_test_split(df: pd.DataFrame, column_name: str, value: str) -> pd.DataFrame:

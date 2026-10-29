@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader
 from typing import Callable, Literal, Optional
-import numpy as np
+from tqdm import tqdm
 from script.utils.scheduler import get_scheduler
 
 def move_batch_to_device(
@@ -32,7 +32,8 @@ def train_one_epoch(
     dataloader: DataLoader,
     criterion: Callable,
     optimizer: torch.optim.Optimizer,
-    device: torch.device
+    device: torch.device,
+    weighted_loss: bool = False
 ) -> float:
     """
     Trains the model for one epoch.
@@ -43,28 +44,39 @@ def train_one_epoch(
         criterion (Callable): Loss function.
         optimizer (torch.optim.Optimizer): Optimizer for updating model parameters.
         device (torch.device): Device to perform computation on.
-
+        weighted_loss (bool, optional): Whether to use weighted loss. Default is False.
     Returns:
         float: Average training loss for the epoch.
     """
     model.train()
     total_loss = 0.0
-    for *X, y in dataloader:
+    total_samples = 0
+    for batch in dataloader:
+        if weighted_loss:
+            *X, y, weights = batch
+            weights = weights.to(device)
+        else:
+            *X, y = batch
         *X, y = move_batch_to_device(X, y, device)
         optimizer.zero_grad()
         outputs = model(*X)
         loss = criterion(outputs, y)
+        if weighted_loss:
+            loss = (loss.reshape(len(y), -1).mean(dim=1) * weights).mean()
         loss.backward()
         optimizer.step()
-        total_loss += loss.item()
-    return total_loss / len(dataloader)
+        total_loss += loss.item() * len(y)
+        total_samples += len(y)
+    return total_loss / total_samples
 
 
 def validate_one_epoch(
         model: torch.nn.Module,
         dataloader: torch.utils.data.DataLoader,
         criterion: torch.nn.Module,
-        device: torch.device) -> float:
+        device: torch.device,
+        weighted_loss: bool = False
+        ) -> float:
     """
     Evaluates the model for one epoch on the validation dataset.
 
@@ -79,17 +91,28 @@ def validate_one_epoch(
     """
     model.eval()
     total_loss = 0.0
+    total_samples = 0
     with torch.no_grad():
-        for *X, y in dataloader:
+        for batch in dataloader:
+            if weighted_loss:
+                *X, y, weights = batch
+                weights = weights.to(device)
+            else:
+                *X, y = batch
             *X, y = move_batch_to_device(X, y, device)
             outputs = model(*X)
             loss = criterion(outputs, y)
-            total_loss += loss.item()
-    return total_loss / len(dataloader)
+            if weighted_loss:
+                loss = (loss.reshape(len(y), -1).mean(dim=1) * weights).mean()
+            total_loss += loss.item() * len(y)
+            total_samples += len(y)
+    return total_loss / total_samples
 
 def get_criterion(
         task_type: Literal['regression', 'binary', 'multiclass'],
-        use_logits: bool = False) -> nn.modules.loss._Loss:
+        use_logits: bool = False,
+        reduction: str = 'mean'
+) -> nn.modules.loss._Loss:
     """
     Returns the appropriate loss function for a given machine learning task type.
 
@@ -112,46 +135,50 @@ def get_criterion(
     task_type = task_type.lower()
 
     if task_type == "regression":
-        return nn.MSELoss()
+        return nn.MSELoss(reduction=reduction)
     elif task_type == "binary":
-        return nn.BCEWithLogitsLoss() if use_logits else nn.BCELoss()
+        return nn.BCEWithLogitsLoss(reduction=reduction) if use_logits else nn.BCELoss(reduction=reduction)
     elif task_type == "multiclass":
-        return nn.CrossEntropyLoss()
+        return nn.CrossEntropyLoss(reduction=reduction)
     else:
         raise ValueError(f"Unsupported task_type '{task_type}'. Must be 'regression', 'binary' or 'multiclass'.")
 
 def train_model(
     model: nn.Module,
     train_loader: DataLoader,
-    val_loader: Optional[DataLoader],
     optimizer: torch.optim.Optimizer,
     task_type: Literal['regression', 'binary', 'multiclass'],
+    val_loader: Optional[DataLoader] = None,
     use_logits: bool = True,
     num_epochs: int = 50,
     scheduler_name: Optional[str] = None,
     scheduler_kwargs: Optional[dict] = None,
-    verbose: bool = True
+    weighted_loss: bool = False,
+    weighted_val_loss: bool = False,
 ):
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model = model.to(device)
+    """Train on the model's device; move it there before creating the optimizer."""
+    device = next(model.parameters()).device
 
-    criterion = get_criterion(task_type, use_logits)
+    train_criterion = get_criterion(task_type, use_logits, reduction="none" if weighted_loss else "mean")
+    val_criterion = get_criterion(task_type, use_logits, reduction="none" if weighted_val_loss else "mean")
     scheduler = get_scheduler(optimizer, scheduler_name, **scheduler_kwargs or {})
-
-    for epoch in range(num_epochs):
-        train_loss = train_one_epoch(model, train_loader, criterion, optimizer, device)
+    tqdm_bar = tqdm(range(num_epochs), desc="Training Progress", unit=" epochs ", colour="blue")
+    for epoch in tqdm_bar:
+        train_loss = train_one_epoch(model, train_loader, train_criterion, optimizer, device, weighted_loss=weighted_loss)
         if val_loader is not None:
-            val_loss = validate_one_epoch(model, val_loader, criterion, device)
-
+            val_loss = validate_one_epoch(model, val_loader, val_criterion, device, weighted_loss=weighted_val_loss)
 
         if scheduler:
             if scheduler_name == 'reduceonplateau':
-                scheduler.step(val_loss)
+                scheduler.step(val_loss if val_loader is not None else train_loss)
             else:
                 scheduler.step()
-
-        if verbose:
-            if  val_loader is None:
-                print(f"Epoch {epoch+1}/{num_epochs} - Train Loss: {train_loss:.4f}")
-            else:
-                print(f"Epoch {epoch+1}/{num_epochs} - Train Loss: {train_loss:.4f} - Val Loss: {val_loss:.4f}")
+        if val_loader is not None:
+            tqdm_bar.set_postfix({
+                "train_loss": f"{train_loss:.4f}",
+                "val_loss": f"{val_loss:.4f}"
+            })
+        else:
+            tqdm_bar.set_postfix({
+            "train_loss": f"{train_loss:.4f}",
+        })
